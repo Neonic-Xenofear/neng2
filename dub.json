@@ -1,0 +1,27 @@
+{
+	"name": "neng2",	
+
+	"configurations": [
+		{
+			"name": "eng_exec",
+			"targetType": "executable",
+			"mainSourceFile": "./source/engine/main.d"
+		},
+		{
+			"name": "eng_lib",
+			"targetType": "dynamicLibrary"
+		}
+	],
+
+	"dependencies": {
+		"derelict-sdl2": "~>3.1.0-alpha.4",
+		"derelict-gl3": "~>2.0.0-beta.7",
+		"derelict-util": "3.0.0-beta.2",
+		"sdlang-d": "0.10.5",
+		"x11": "1.0.21"
+	},
+
+	"targetPath": "bin/x86",
+	"targetType": "executable"
+
+}

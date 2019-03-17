@@ -1,0 +1,49 @@
+engine {
+    version {
+        major 0
+        minor 0
+        path 1
+    }
+
+    app {
+        window {
+            class "CSDLWindow"
+            title "neng"
+            width 800
+            height 600
+        }
+    }
+
+    framework {
+        rgui "imgui"
+    }
+
+    modules {
+        rules {
+            bAllowWorkWithoutRender false
+        }
+
+        render "OPENGL_RENDER" {
+            bVSync true
+            fpsLock -1
+
+            clearColor "0.3, 0.3, 0.3, 1.0"
+
+            thread {
+                name "Render"
+            }
+        }
+
+        physics "BOX2D"
+        input "SDL_INPUT" {
+            gamepad {
+                defaultDeadZone 200
+            }
+        }
+    }
+
+    paths {
+        RESOURCES_PATH "(__path)../resources"
+        BIN_PATH "(__path).."
+    }
+}

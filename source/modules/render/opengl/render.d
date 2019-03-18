@@ -185,9 +185,10 @@ public:
             throw new Exception( "Trying to generate null texture" );
         }
 
-        texture.lock();
+        SResourceLock lock;
+        texture.lock( lock );
         scope( exit ) {
-            texture.unlock();
+            texture.unlock( lock );
         }
 
         if ( !texture.extData.isNull() ) {
@@ -260,9 +261,10 @@ public:
             throw new Exception( "Trying to destroy null texture" );
         }
 
-        texture.lock();
+        SResourceLock lock;
+        texture.lock( lock );
         scope( exit ) {
-            texture.unlock();
+            texture.unlock( lock );
         }
         
         if ( texture.extData.isNull() ) {
@@ -281,9 +283,10 @@ public:
             throw new Exception( "Trying to draw null texture" );
         }
 
-        texture.lock();
+        SResourceLock lock;
+        texture.lock( lock );
         scope( exit ) {
-            texture.unlock();
+            texture.unlock( lock );
         }
 
         if ( texture.extData.isNull() ) {
@@ -343,9 +346,10 @@ public:
             throw new Exception( "Trying to draw null texture" );
         }
 
-        texture.lock();
+        SResourceLock lock;
+        texture.lock( lock );
         scope( exit ) {
-            texture.unlock();
+            texture.unlock( lock );
         }
 
         if ( texture.extData.isNull() ) {
@@ -523,9 +527,10 @@ public:
             throw new Exception( "Trying to gen invalid mesh" );
         }
 
-        mesh.lock();
+        SResourceLock lock;
+        mesh.lock( lock );
         scope( exit ) {
-            mesh.unlock();
+            mesh.unlock( lock );
         }
 
         if ( !mesh.extData.isNull() ) {
@@ -569,9 +574,10 @@ public:
             throw new Exception( "Trying to destroy invalid mesh" );
         }
 
-        mesh.lock();
+        SResourceLock lock;
+        mesh.lock( lock );
         scope( exit ) {
-            mesh.unlock();
+            mesh.unlock( lock );
         }
 
         if ( mesh.extData.isNull() ) {
@@ -596,9 +602,10 @@ public:
     }
 
     override void compileShader( CShader shader ) {
-        shader.lock();
+        SResourceLock lock;
+        shader.lock( lock );
         scope( exit ) {
-            shader.unlock();
+            shader.unlock( lock );
         }
 
         GLuint sVert;

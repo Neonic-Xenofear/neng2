@@ -1,6 +1,7 @@
 module engine.core.resource.base.resource;
 
 import std.algorithm : canFind;
+import std.uuid;
 
 public import engine.core.vfs.vfs;
 import engine.core.object;
@@ -49,6 +50,18 @@ struct ResourceLoadType {
     EResourceLoadingType type;
 }
 
+/**
+    Used to lock resource
+*/
+struct SResourceLock {
+    UUID id;
+
+    void setupID() {
+        id = randomUUID();
+    }
+
+    @disable this( this );
+}
 
 /**
     Engine resource object, used for 
@@ -84,8 +97,7 @@ public:
 
 protected:
     AObject[] owners;
-
-    bool bLocked = false;
+    SResourceLock locker;
 
 public:
     ///
@@ -95,7 +107,7 @@ public:
 
     ~this() {
         import engine.app.logger : log;
-        assert( !bLocked, "Delete resource while it locked. Perhaps you used \"destroy\" instead \"queueFree\"?" );
+        assert( locker.id.empty(), "Delete resource while it locked. Perhaps you used \"destroy\" instead \"queueFree\"?" );
 
         if ( owners.length > 0 ) {
             log.warning( "Resource is still have owners!" );
@@ -105,19 +117,22 @@ public:
     /**
         Block resource delete
     */
-    void lock() {
-        bLocked = true;
+    void lock( ref SResourceLock lock ) {
+        assert( locker.id.empty(), "Trying to lock already locked resource" );
+        lock.setupID();
+        locker.id = lock.id;
     }
 
     /**
         Allow resource delete
     */
-    void unlock() {
-        bLocked = false;
+    void unlock( ref SResourceLock lock ) {
+        assert( lock.id == locker.id, "Invalid resource locker" );
+        locker.destroy();
     }
 
     bool isLocked() {
-        return bLocked;
+        return locker.id.empty();
     }
 
     /**

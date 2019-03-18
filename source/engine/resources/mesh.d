@@ -11,6 +11,9 @@ struct SVertex {
     SVec3F texCoords;
 }
 
+/**
+    How offen vertex data will change
+*/
 enum EMeshType {
     MT_STATIC,
     MT_DYNAMIC,

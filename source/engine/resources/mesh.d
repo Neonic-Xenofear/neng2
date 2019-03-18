@@ -17,6 +17,7 @@ enum EMeshType {
 }
 
 @RegisterResource( "Mesh" )
+@ResourceLoadType( EResourceLoadingType.RLT_ASYNC )
 class CMesh : AResource {
     mixin( TResourceRegister!() );
 public:

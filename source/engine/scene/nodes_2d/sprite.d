@@ -32,7 +32,6 @@ public:
 
     override void onDestroy() {
         texture.removeOwner( this );
-        texture.destroy();
     }
 
     override void onDraw( INodeCamera camera ) {

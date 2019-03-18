@@ -16,8 +16,8 @@ struct SShaderCodeFile {
     EShaderType type;
 }
 
-@AllowLoadOnFiber
 @RegisterResource( "Shader" )
+@ResourceLoadType( EResourceLoadingType.RLT_ASYNC )
 class CShader : AResource {
     mixin( TResourceRegister!() );
     CExtData extData;

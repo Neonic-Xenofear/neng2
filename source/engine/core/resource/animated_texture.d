@@ -28,6 +28,8 @@ public:
     }
 }
 */
+@RegisterResource( "AnimatedTexture" )
+@ResourceLoadType( EResourceLoadingType.RLT_ASYNC )
 class CAnimatedTexture : AResource {
     mixin( TResourceRegister!() );
     

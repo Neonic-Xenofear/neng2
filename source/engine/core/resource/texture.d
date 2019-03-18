@@ -11,8 +11,8 @@ import engine.core.utils.envelope;
 /**
     Texture object
 */
-@AllowLoadOnFiber
 @RegisterResource( "Texture" )
+@ResourceLoadType( EResourceLoadingType.RLT_ASYNC )
 class CTexture : AResource {
     mixin( TResourceRegister!() );
 

@@ -14,12 +14,27 @@ enum EResourceLoadPhase {
     RLP_SUCCES,
 }
 
+enum EResourceLoadingType {
+    RLT_STATIC,       //Load in main thread
+    RLT_ASYNC,        //Load in separated thread
+    RLT_UPON_REQUEST, //Load when get request
+}
+
 /**
     Register resource need code
 */
 template TResourceRegister() {
     enum TResourceRegister = 
-    TRegisterObject!();
+    TRegisterObject!() ~ q{
+
+    import engine.core.utils.uda : getUDA, hasUDA;
+    alias T = typeof( this );
+    enum hasRegResUDA = hasUDA!( T, RegisterResource );
+    enum hasResLoadTypeUDA = hasUDA!( T, ResourceLoadType );
+
+    static assert( hasRegResUDA, "Resource dont have register UDA: " ~ T.stringof );
+    static assert( hasResLoadTypeUDA, "Resource dont have loading type UDA: " ~ T.stringof );
+    };
 }
 
 /**
@@ -30,7 +45,9 @@ struct RegisterResource {
     string resTypeName;
 }
 
-enum AllowLoadOnFiber;
+struct ResourceLoadType {
+    EResourceLoadingType type;
+}
 
 
 /**
@@ -53,6 +70,8 @@ enum AllowLoadOnFiber;
         ...
     }
 */
+@RegisterResource( "Resource" )
+@ResourceLoadType( EResourceLoadingType.RLT_STATIC )
 abstract class AResource : AObject {
     mixin( TResourceRegister!() );
 public:
@@ -132,7 +151,7 @@ public:
 
             if ( owners.length < 1 ) {
                 getResourceManager().removeResource( this );
-                this.destroy();
+                this.queueFree();
             }
         }
     }

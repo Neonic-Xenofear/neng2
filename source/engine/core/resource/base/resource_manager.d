@@ -70,7 +70,7 @@ public:
             nRes.loadPhase = EResourceLoadPhase.RLP_LOADING;
 
             //Check if resource allow load on fiber
-            static if ( allowLoadOnFiber!T ) {
+            static if ( allowAsyncLoad!T ) {
                 SFiberManager.startFiber( {
                     resLoader.loadByPath( nRes, path );
                     if ( nRes.isValidRaw() ) {
@@ -101,7 +101,7 @@ public:
         if ( IResourceLoader* resLoader = getResourceClassType!T in loaders ) {
             resource.loadPhase = EResourceLoadPhase.RLP_LOADING;
 
-            static if ( allowLoadOnFiber!T ) {
+            static if ( allowAsyncLoad!T ) {
                 SFiberManager.startFiber( {
                     resLoader.loadByPath( resource, path );
                     if ( resource.isValidRaw() ) {
@@ -194,9 +194,14 @@ private:
         return getUDA!( T, RegisterResource ).resTypeName;
     }
 
-    static bool allowLoadOnFiber( T )() {
-        import engine.core.utils.uda : hasUDA;
-        return hasUDA!( T, AllowLoadOnFiber );
+    static bool allowAsyncLoad( T )() {
+        import engine.core.utils.uda : hasUDA, getUDA;
+        enum hasLoadUDA = hasUDA!( T, ResourceLoadType );
+        static if ( hasLoadUDA ) {
+            return getUDA!( T, ResourceLoadType ).type == EResourceLoadingType.RLT_ASYNC;
+        } else {
+            return false;
+        }
     }
 
     void genMetaFile( AResource resource ) {

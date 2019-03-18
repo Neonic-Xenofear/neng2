@@ -6,6 +6,8 @@ import engine.app.logger;
 import engine.core.resource.base.resource;
 import engine.core.engine.config;
 
+@RegisterResource( "SDLang" )
+@ResourceLoadType( EResourceLoadingType.RLT_STATIC )
 class CSDLang : AResource {
     mixin( TResourceRegister!() );
 private:

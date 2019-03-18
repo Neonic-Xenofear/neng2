@@ -9,6 +9,7 @@ import engine.core.resource;
 
 @RegisterResource( "Script" )
 @ScriptExport( "CScript" )
+@ResourceLoadType( EResourceLoadingType.RLT_STATIC )
 class CScript : AResource {
     mixin( TResourceRegister!() );
 protected:

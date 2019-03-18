@@ -184,12 +184,8 @@ public:
         if ( texture is null ) {
             throw new Exception( "Trying to generate null texture" );
         }
-
-        SResourceLock lock;
-        texture.lock( lock );
-        scope( exit ) {
-            texture.unlock( lock );
-        }
+        
+        mixin( TLockResource!( texture ) );
 
         if ( !texture.extData.isNull() ) {
             throw new Exception( "Trying to generate already generated render info" );
@@ -261,11 +257,7 @@ public:
             throw new Exception( "Trying to destroy null texture" );
         }
 
-        SResourceLock lock;
-        texture.lock( lock );
-        scope( exit ) {
-            texture.unlock( lock );
-        }
+        mixin( TLockResource!( texture ) );
         
         if ( texture.extData.isNull() ) {
             throw new Exception( "Trying destroy null render data" );
@@ -283,11 +275,7 @@ public:
             throw new Exception( "Trying to draw null texture" );
         }
 
-        SResourceLock lock;
-        texture.lock( lock );
-        scope( exit ) {
-            texture.unlock( lock );
-        }
+        mixin( TLockResource!( texture ) );
 
         if ( texture.extData.isNull() ) {
             throw new Exception( "Invalid texture render data" );
@@ -346,11 +334,7 @@ public:
             throw new Exception( "Trying to draw null texture" );
         }
 
-        SResourceLock lock;
-        texture.lock( lock );
-        scope( exit ) {
-            texture.unlock( lock );
-        }
+        mixin( TLockResource!( texture ) );
 
         if ( texture.extData.isNull() ) {
             throw new Exception( "Invalid texture render data" );
@@ -527,11 +511,7 @@ public:
             throw new Exception( "Trying to gen invalid mesh" );
         }
 
-        SResourceLock lock;
-        mesh.lock( lock );
-        scope( exit ) {
-            mesh.unlock( lock );
-        }
+        mixin( TLockResource!( mesh ) );
 
         if ( !mesh.extData.isNull() ) {
             throw new Exception( "Mesh data already generated" );
@@ -574,11 +554,7 @@ public:
             throw new Exception( "Trying to destroy invalid mesh" );
         }
 
-        SResourceLock lock;
-        mesh.lock( lock );
-        scope( exit ) {
-            mesh.unlock( lock );
-        }
+        mixin( TLockResource!( mesh ) );
 
         if ( mesh.extData.isNull() ) {
             throw new Exception( "Mesh data already destroyed" );
@@ -602,11 +578,7 @@ public:
     }
 
     override void compileShader( CShader shader ) {
-        SResourceLock lock;
-        shader.lock( lock );
-        scope( exit ) {
-            shader.unlock( lock );
-        }
+        mixin( TLockResource!( shader ) );
 
         GLuint sVert;
         GLuint sFrag;

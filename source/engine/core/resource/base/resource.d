@@ -64,6 +64,28 @@ struct SResourceLock {
 }
 
 /**
+    Lock given resource and unlock by exit scope
+    Params:
+        T - resource var
+*/
+template TLockResource( alias T ) {
+    import std.string : format;
+
+    enum TLockResource = 
+    format( 
+        q{
+            //assert( !(%1$s).isLocked(), "Trying to process locked resource" );
+            SResourceLock lock;
+            (%1$s).lock( lock );
+            scope( exit ) {
+                (%1$s).unlock( lock );
+            }
+        },
+        __traits( identifier, T )
+    );
+}
+
+/**
     Engine resource object, used for 
     all loadable files
 

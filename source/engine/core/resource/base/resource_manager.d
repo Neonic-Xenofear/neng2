@@ -26,6 +26,10 @@ public:
             res.destroy();
         }
 
+        foreach ( res; queueFree ) {
+            res.destroy();
+        }
+
         foreach ( loader; loaders ) {
             loader.destroy();
         }

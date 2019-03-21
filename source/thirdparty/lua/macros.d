@@ -152,6 +152,10 @@ void luaL_newlib(lua_State* L, luaL_Reg[] l) {
     luaL_setfuncs(L, l.ptr, 0);
 }
 
+bool luaL_checkboolean( lua_State* L, int n ) {
+    return cast( bool )lua_toboolean( L, n );
+}
+
 const(char)* luaL_checkstring(lua_State* L, int n) {
     return luaL_checklstring(L, n, null);
 }

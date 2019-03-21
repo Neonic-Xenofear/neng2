@@ -5,8 +5,9 @@ import std.exception;
 import dbox;
 
 import engine.physics2d;
+import modules.box2d_phys.utils;
 
-enum PIXELS_IN_METER = 10;
+float PIXELS_IN_METER = 100;
 
 class b2CBodyData {
     b2BodyDef bodyDef;
@@ -61,9 +62,9 @@ class b2CBodyData {
         if ( iBody.getType() != EPhysBodyType.PBT_STATIC ) {
             b2FixtureDef fixtureDef;
             fixtureDef.shape = shape;
-            fixtureDef.density = 1.0f;
+            fixtureDef.density = 0.0f;
             fixtureDef.friction = 0.3f;
-            fixtureDef.restitution = 0.5f;
+            fixtureDef.restitution = 0.3f;
             fixture = genBody.CreateFixture( &fixtureDef );
         } else {
             //Static body density need to be 0
@@ -81,6 +82,7 @@ class b2CBodyData {
             genBody.DestroyFixture( *fix );
             shapes.remove( iShape );
             fixtures.remove( iShape );
+            ( *fix ).destroy();
         }
     }
 

@@ -78,7 +78,7 @@ private void test() {
 
     CStaticBody2D stat = new CStaticBody2D();
     stat.addShape( new CBoxShape2D( 500, 10 ) );
-    stat.setPos( SVec2F( 0, 400 ) );
+    stat.setPos( SVec2F( 0, 600 ) );
 
     getEngine().sceneTree.addRootNode( stat );
 
@@ -89,10 +89,6 @@ private void test() {
     textbox.setRectHeight( 100 );
     textbox.setNormalTexture( loadTexture( "resources/test/textures/test1.png" ) );
     getEngine().sceneTree.addRootNode( textbox );
-
-    CTextBox tex = new CTextBox();
-    tex.transform.pos = SVec2F( 100, 100 );
-    getEngine().sceneTree.addRootNode( tex );
 
     CWindowGUI win = new CWindowGUI();
     win.setTitleTexture( loadTexture( "resources/test/textures/test1.png" ) );

@@ -11,7 +11,7 @@ import modules.box2d_phys.utils;
 import modules.box2d_phys.body_data;
 import modules.box2d_phys.collision_listener;
 
-enum PIXELS_IN_METER = 10;
+float PIXELS_IN_METER = 100;
 
 class b2CPhysWorld2D : APhysWorld2D {
 private:
@@ -184,8 +184,25 @@ public:
                 ps.move( ( move / SVec2F( PIXELS_IN_METER, PIXELS_IN_METER ) ).toB2Vec() );
                 bool bActive = data.genBody.IsActive();
                 data.genBody.ResetMassData();
-                data.genBody.SetActive(!bActive);
-                data.genBody.SetActive(bActive);
+                data.genBody.SetActive( !bActive );
+                data.genBody.SetActive( bActive );
+            }
+        }
+    }
+
+    override void setShapeIsTrigger( CBaseBody2D iBody, CShape2D shape, bool bIsTrigger ) {
+        if ( !iBody ) {
+            return;
+        }
+
+        if ( iBody.extData.isNull() ) {
+            return;
+        }
+
+        b2CBodyData data = iBody.extData.as!b2CBodyData;
+        if ( data ) {
+            if ( b2Fixture** fix = shape in data.fixtures ) {
+                ( *fix ).SetSensor( bIsTrigger );
             }
         }
     }

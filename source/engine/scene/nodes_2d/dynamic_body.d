@@ -30,10 +30,6 @@ public:
         physBody.addShape( iShape );
     }
 
-    void moveShape( CShape2D iShape, SVec2F move ) {
-        physBody.moveShape( iShape, move );
-    }
-
     void setLinearVelocity( SVec2F vel ) {
         physBody.setLinearVelocity( vel );
     }
@@ -47,13 +43,6 @@ public:
     void script_addShape( CShape2D* shape ) {
         if ( shape ) {
             addShape( *shape );
-        }
-    }
-
-    @ScriptExport( "moveShape", MethodType.method, "", RetType.none )
-    void script_moveShape( CShape2D* iShape, SVec2D_Script* move ) {
-        if ( iShape && move ) {
-            moveShape( *iShape, SVec2F( move.x, move.y ) );
         }
     }
 

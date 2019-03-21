@@ -14,12 +14,53 @@ enum EShapeType {
 /**
     Basic phys body shape. 
 */
+@ScriptExport( "CShape2D" )
 class CShape2D {
     CExtData extData;
     EShapeType type;
+    CBaseBody2D parent;
 
+protected:
+    bool bIsTrigger = false;
+
+public:
+    @ScriptExport( "", MethodType.ctor )
     this() {
         extData = new CExtData();
+    }
+
+    void move( SVec2F m ) {
+        getPhysWorld2D().moveBodyShape( parent, this, m );
+    }
+
+    @property
+    bool isTrigger() {
+        return bIsTrigger;
+    }
+
+    @property
+    void isTrigger( bool bVal ) {
+        if ( bIsTrigger != bVal ) {
+            bIsTrigger = bVal;
+            getPhysWorld2D().setShapeIsTrigger( parent, this, bIsTrigger );
+        }
+    }
+
+    @ScriptExport( "move", MethodType.method, "", RetType.none )
+    void script_move( SVec2D_Script* m ) {
+        if ( m ) {
+            move( SVec2F( m.x, m.y ) );
+        }
+    }
+
+    @ScriptExport( "setIsTrigger", MethodType.method, "", RetType.none )
+    void script_setIsTrigger( bool bVal ) {
+        isTrigger( bVal );
+    }
+
+    @ScriptExport( "getIsTrigger", MethodType.method, "", RetType.number )
+    bool script_getIsTrigger() {
+        return bIsTrigger;
     }
 }
 

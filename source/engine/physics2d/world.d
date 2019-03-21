@@ -77,4 +77,7 @@ abstract class APhysWorld2D : IModule {
             move - move vector.
     */
     void moveBodyShape( CBaseBody2D iBody, CShape2D shape, SVec2F move );
+
+
+    void setShapeIsTrigger( CBaseBody2D iBody, CShape2D shape, bool bIsTrigger );
 }

@@ -104,6 +104,7 @@ public:
     void addShape( CShape2D newShape ) {
         if ( !shapes.canFind( newShape ) ) {
             getPhysWorld2D().addBodyShape( this, newShape );
+            newShape.parent = this;
             shapes ~= newShape;
         }
     }
@@ -118,6 +119,7 @@ public:
         if ( shapes.canFind( iShape ) ) {
             getPhysWorld2D().removeBodyShape( this, iShape );
             removeElement( shapes, iShape );
+            iShape.parent = null;
         }
     }
 
@@ -126,16 +128,6 @@ public:
     */
     CShape2D[] getShapes() {
         return shapes;
-    }
-
-    /**
-        Move given body shape.
-        Params:
-            shape - move shape.
-            move - move vector.
-    */
-    void moveShape( CShape2D shape, SVec2F move ) {
-        getPhysWorld2D().moveBodyShape( this, shape, move );
     }
 }
 

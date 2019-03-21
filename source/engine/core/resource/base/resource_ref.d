@@ -1,10 +1,9 @@
 module engine.core.resource.base.resource_ref;
 
-import std.signals;
-
 import engine.core.resource.base.resource;
 import engine.core.serialize;
 import engine.core.engine;
+import engine.core.utils.signal;
 
 /**
     Used for serialize resources on scene,
@@ -19,7 +18,7 @@ public:
     T resource; ///Resource instance
     alias resource this;
 
-    mixin Signal!() onDeserialized;
+    SSignal!() onDeserialized;
 
     this( T res ) {
         resource = res;

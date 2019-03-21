@@ -1,14 +1,11 @@
 module engine.core.input.input;
 
-import std.signals;
-
 import engine.core.mod;
 public import engine.core.math.vec;
 public import engine.core.input.keyboard;
 public import engine.core.input.mouse;
 
 class CInput : IModule {
-
     @property
     SModuleInfo info() {
         return SModuleInfo( 

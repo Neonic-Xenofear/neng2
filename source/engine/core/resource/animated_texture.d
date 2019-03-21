@@ -1,10 +1,9 @@
 module engine.core.resource.animated_texture;
 
-import std.signals;
-
 import engine.core.engine.engine;
 import engine.core.resource.texture;
 import engine.core.engine.timer;
+import engine.core.utils.signal;
 
 /*
 alias CTextureArray = CTexture[];
@@ -42,7 +41,7 @@ class CAnimatedTexture : AResource {
 
     CTimer timer;
 
-    mixin Signal!( CTexture ) onFrameUpdated;
+    SSignal!( CTexture ) onFrameUpdated;
 
     this() {
         timer = new CTimer();

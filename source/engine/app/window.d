@@ -1,10 +1,9 @@
 module engine.app.window;
 
-import std.signals;
-
 import engine.core.math.aabb;
 import engine.core.engine.engine;
 import engine.core.utils.array;
+import engine.core.utils.signal;
 
 enum ERenderContext {
     RC_OPENGL,
@@ -23,7 +22,7 @@ protected:
     string title;
 
 public:
-    mixin Signal!( int, int ) onResized;
+    SSignal!( int, int ) onResized;
 
     ~this() {
         onResized.disconnectAll();

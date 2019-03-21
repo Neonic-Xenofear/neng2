@@ -1,10 +1,9 @@
 module engine.scene.gui.button;
 
-import std.signals;
-
-import engine.core.input;
 import engine.core.resource;
 import engine.scene.gui.widget;
+import engine.core.input;
+import engine.core.utils.signal;
 
 class CButton : CWidget {
     mixin( NODE_REG!() );
@@ -17,10 +16,10 @@ protected:
     SResRef!CTexture normalTexture;
 
 public:
-    mixin Signal!() onPressed;
-    mixin Signal!() onReleased;
-    mixin Signal!() onHovered;
-    mixin Signal!() onUnhovered;
+    SSignal!() onPressed;
+    SSignal!() onReleased;
+    SSignal!() onHovered;
+    SSignal!() onUnhovered;
 
     override void onDestroy() {
         onPressed.disconnectAll();

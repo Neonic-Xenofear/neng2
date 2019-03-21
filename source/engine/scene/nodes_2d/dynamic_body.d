@@ -16,7 +16,11 @@ public:
         physBody = new CPhysDynamicBody2D();
         physBody.onPosUpdated.connect( &updatePosFromPhysWorld );
         physBody.initBodyData();
+
+        physBody.onCollide.connect( &onCollideImpl );
     }
+
+    void onCollide( CBaseBody2D iBody ) {}
 
     override void onDestroy() {
         physBody.destroy();
@@ -49,5 +53,10 @@ public:
 protected:
     void updatePosFromPhysWorld( SVec2F newPos ) {
         transform.pos = newPos;
+    }
+
+    void onCollideImpl( CBaseBody2D iBody ) {
+        onCollide( iBody );
+        script.callFunction( "onCollide", iBody );
     }
 }

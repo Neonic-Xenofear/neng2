@@ -1,11 +1,10 @@
 module engine.physics2d.base_body;
 
-import std.signals;
-
 import engine.core.math;
 import engine.core.ext_data;
 public import engine.physics2d.shape;
 import engine.core.engine.engine;
+import engine.core.utils.signal;
 
 /**
     Phys body type.
@@ -19,6 +18,7 @@ enum EPhysBodyType {
 /**
     Basic 2D physics body.
 */
+@ScriptExport( "CBaseBody2D" )
 class CBaseBody2D {
 protected:
     CShape2D[] shapes; ///Attached shaped
@@ -29,9 +29,10 @@ protected:
 public:
     CExtData extData; ///Server gen data
 
-    mixin Signal!( SVec2F ) onPosUpdated; ///Called when postion updated
-    mixin Signal!( CBaseBody2D ) onCollide; ///Called when collide with other object
+    SSignal!( SVec2F ) onPosUpdated; ///Called when postion updated
+    SSignal!( CBaseBody2D ) onCollide; ///Called when collide with other object
 
+    @ScriptExport( "", MethodType.ctor )
     this() {
         extData = new CExtData();
     }

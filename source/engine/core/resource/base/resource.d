@@ -50,40 +50,7 @@ struct ResourceLoadType {
     EResourceLoadingType type;
 }
 
-/**
-    Used to lock resource
-*/
-struct SResourceLock {
-    UUID id;
-
-    void setupID() {
-        id = randomUUID();
-    }
-
-    @disable this( this );
-}
-
-/**
-    Lock given resource and unlock by exit scope
-    Params:
-        T - resource var
-*/
-template TLockResource( alias T ) {
-    import std.string : format;
-
-    enum TLockResource = 
-    format( 
-        q{
-            //assert( !(%1$s).isLocked(), "Trying to process locked resource" );
-            SResourceLock lock;
-            (%1$s).lock( lock );
-            scope( exit ) {
-                (%1$s).unlock( lock );
-            }
-        },
-        __traits( identifier, T )
-    );
-}
+alias TLockResource = TLockObject;
 
 /**
     Engine resource object, used for 
@@ -94,14 +61,6 @@ template TLockResource( alias T ) {
         @RegisterResource( "Texture" )
         class CTexture : AReource {
             mixin( TResourceRegister!() );
-        ...
-    }
-
-    Instead of "destroy", use "queueFree"
-    Example: {
-        ...
-        resource.destroy(); //Invalid, resource can be locked
-        resource.queueFree(); //Correct, resource will be destroyed at the end of frame
         ...
     }
 */
@@ -119,7 +78,6 @@ public:
 
 protected:
     AObject[] owners;
-    SResourceLock locker;
 
 public:
     ///
@@ -128,33 +86,12 @@ public:
     }
 
     ~this() {
+        import engine.core.engine.engine : getResourceManager;
         import engine.app.logger : log;
-        assert( locker.id.empty(), "Delete resource while it locked. Perhaps you used \"destroy\" instead \"queueFree\"?" );
 
         if ( owners.length > 0 ) {
             log.warning( "Resource is still have owners!" );
         }
-    }
-
-    /**
-        Block resource delete
-    */
-    void lock( ref SResourceLock lock ) {
-        assert( locker.id.empty(), "Trying to lock already locked resource" );
-        lock.setupID();
-        locker.id = lock.id;
-    }
-
-    /**
-        Allow resource delete
-    */
-    void unlock( ref SResourceLock lock ) {
-        assert( lock.id == locker.id, "Invalid resource locker" );
-        locker.destroy();
-    }
-
-    bool isLocked() {
-        return locker.id.empty();
     }
 
     /**
@@ -226,14 +163,6 @@ protected:
                 owners.removeElement( own );
             }
         }
-    }
-}
-
-void queueFree( AResource resource ) {
-    import engine.core.engine.engine : getResourceManager;
-
-    if ( resource ) {
-        getResourceManager().addResourceToFreeQueue( resource );
     }
 }
 

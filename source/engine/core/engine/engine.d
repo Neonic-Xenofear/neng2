@@ -16,6 +16,7 @@ public import engine.script;
 public import engine.core.engine.config;
 public import engine.physics2d.world;
 public import engine.core.resource;
+public import engine.core.object;
 
 final class CEngine : ASingleton!CEngine {
 private:
@@ -57,7 +58,14 @@ public:
     }
 
     ~this() {
+        getEngine().sceneTree.destroy();
+
         resourceManager.destroy();
+        CObjectsQueueFree.get().destroy();
+
+        getRender().destroy();
+        CModuleManager.get().unloadModules();
+        getEngine().scriptManager.destroy();
     }
 
     void initWindow() {
@@ -107,7 +115,7 @@ public:
                 countedFrames = 0;
             }
 
-            resourceManager.processQueueFree();
+            CObjectsQueueFree.get().processQueue();
             Time.update();
         }
     }

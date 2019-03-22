@@ -5,11 +5,15 @@ import modules;
 
 void main() {
     log.info( "ENGINE INIT START" );
-        initFS();
+        bencFunc!( { 
+            initFS();
+        } )( "INIT FS" );
 
-        registerEngineModules();
-        registerFrameworkModules();
-        registerModules();
+        bencFunc!( { 
+            registerEngineModules();
+            registerFrameworkModules();
+            registerModules();
+        } )( "MODULES_REGISTER" );
 
         bencFunc!( { CModuleManager.get().loadModules( EModuleInitPhase.MIP_PRE ); } )( "MODULES_PRE_INIT" );
         loadEngineConfig( getVFS().getFile( "resources/configs/engine.sdl" ) );
@@ -26,11 +30,7 @@ void main() {
     log.info( "ENGINE END MAIN LOOP" );
 
     //Engine shutdown
-        getEngine().sceneTree.destroy();
-        getResourceManager().destroy();
-        getRender().destroy();
-        CModuleManager.get().unloadModules();
-        getEngine().scriptManager.destroy();
+        getEngine().destroy();
     log.info( "ENGINE SHUTDOWN" );
 }
 

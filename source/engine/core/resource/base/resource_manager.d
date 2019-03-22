@@ -1,7 +1,5 @@
 module engine.core.resource.base.resource_manager;
 
-import std.algorithm : canFind;
-
 import engine.core.engine : getVFS;
 import engine.app.logger;
 import engine.core.multithreading;
@@ -18,15 +16,9 @@ private:
     AResource[] resources;
     IResourceLoader[string] loaders;
 
-    AResource[] queueFree;
-
 public:
     ~this() {
         foreach ( res; resources ) {
-            res.destroy();
-        }
-
-        foreach ( res; queueFree ) {
             res.destroy();
         }
 
@@ -165,25 +157,6 @@ public:
         SSerializer serial;
         res.serialize( serial );
         return serial.toString();
-    }
-
-    void addResourceToFreeQueue( AResource res ) {
-        if ( !queueFree.canFind( res ) ) {
-            queueFree ~= res;
-        }
-    }
-
-    /**
-        Remove unlocked resources in queue
-    */
-    void processQueueFree() {
-        foreach ( res; queueFree ) {
-            if ( !res.isLocked ) {
-                removeResource( res );
-                queueFree.removeElement( res );
-                res.destroy();
-            }
-        }
     }
 
 private:

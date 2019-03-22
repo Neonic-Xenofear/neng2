@@ -11,11 +11,11 @@ void main() {
         registerFrameworkModules();
         registerModules();
 
-        CModuleManager.get().loadModules( EModuleInitPhase.MIP_PRE );
+        bencFunc!( { CModuleManager.get().loadModules( EModuleInitPhase.MIP_PRE ); } )( "MODULES_PRE_INIT" );
         loadEngineConfig( getVFS().getFile( "resources/configs/engine.sdl" ) );
-        CModuleManager.get().loadModules( EModuleInitPhase.MIP_NORMAL );
+        bencFunc!( { CModuleManager.get().loadModules( EModuleInitPhase.MIP_NORMAL ); } )( "MODULES_NORMAL_INIT" );
         getEngine().updateModules();
-        CModuleManager.get().loadModules( EModuleInitPhase.MIP_POST );
+        bencFunc!( { CModuleManager.get().loadModules( EModuleInitPhase.MIP_POST ); } )( "MODULES_POST_INIT" );
         getEngine().initWindow();
         getEngine().render = new CMTRender();
     log.info( "ENGINE INIT END" );
@@ -74,7 +74,7 @@ private void test() {
     scr.className = "CTest";
     camera.setScript( scr );
     getEngine().sceneTree.addRootNode( camera );
-    getEngine().sceneTree.setCamera( camera );
+    getEngine().sceneTree.currentCamera = camera;
 
     CStaticBody2D stat = new CStaticBody2D();
     stat.addShape( new CBoxShape2D( 500, 10 ) );

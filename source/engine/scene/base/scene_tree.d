@@ -15,11 +15,13 @@ import engine.core.input;
 */
 class CSceneTree : AObject {
     mixin( TRegisterObject!() );
+public:
+    INodeCamera currentCamera; ///Main camera, sends to render
+
 private:
     @Serialize
     CNode[] rootNodes; ///Root nodes
     CNode[] scriptNodes; ///Nodes blacklisted from serialize
-    INodeCamera currentCamera; ///Main camera, sends to render
 
 public:
     ~this() {
@@ -40,13 +42,21 @@ public:
             return;
         }
 
+        //Send all draw information
+        foreach ( CNode node; rootNodes ) {
+            if ( !node ) {
+                continue;
+            }
+
+            node.fullDraw( currentCamera );
+        }
+
         foreach ( CNode node; rootNodes ) {
             if ( !node ) {
                 continue;
             }
 
             node.fullUpdate( delta );
-            node.fullDraw( currentCamera );
         }
     }
 
@@ -90,15 +100,6 @@ public:
 
     CNode[] getScriptNodes() {
         return scriptNodes;
-    }
-
-    /**
-        Set main scene camera
-        Params:
-            camera - set camera
-    */
-    void setCamera( INodeCamera camera ) {
-        currentCamera = camera;
     }
     
     /**

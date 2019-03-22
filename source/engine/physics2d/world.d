@@ -4,11 +4,14 @@ public import engine.core.math;
 
 public import engine.core.mod.imod;
 public import engine.physics2d.base_body;
+public import engine.physics2d.raycast_result;
 
 /**
     Phys world or phys server for manipulate phys bodies.
 */
 abstract class APhysWorld2D : IModule {
+    ushort[string] collisionMasks;
+
     @property
     final EModuleUpdate updateInfo() {
         return EModuleUpdate.MU_NORMAL;
@@ -17,6 +20,22 @@ abstract class APhysWorld2D : IModule {
     @property
     final EModuleInitPhase initPhase() {
         return EModuleInitPhase.MIP_UPON_REQUEST;
+    }
+
+    final void updateCollisionMasks() {
+        import std.string : split;
+        import std.conv : to;
+
+        string[] splittedValues = confGets( "engine/modules/physics/collisionMasks" ).split( ";" );
+        foreach ( string ps; splittedValues ) {
+            string[] nameVal = ps.split( " " );
+
+            if ( nameVal.length < 2 ) {
+                continue;
+            }
+
+            collisionMasks[nameVal[0]] = to!ushort( nameVal[1] );
+        }
     }
 
     /**

@@ -4,6 +4,7 @@ public:
 import engine.physics2d.base_body;
 import engine.physics2d.shape;
 import engine.physics2d.world;
+import engine.physics2d.raycast_result;
 
 import engine.core.mod.register_module;
 

@@ -34,7 +34,13 @@ engine {
             }
         }
 
-        physics "BOX2D"
+        physics "BOX2D" {
+            collisionMasks \
+                           \
+            "GROUND 0000;\
+             PLAYER 0001;"
+        }
+
         input "SDL_INPUT" {
             gamepad {
                 defaultDeadZone 200

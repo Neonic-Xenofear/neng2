@@ -50,6 +50,11 @@ public:
         }
     }
 
+    @ScriptExport( "getPhysBody", MethodType.method, "", RetType.userdat )
+    CBaseBody2D getPhysBody() {
+        return physBody;
+    }
+
 protected:
     void updatePosFromPhysWorld( SVec2F newPos ) {
         transform.pos = newPos;

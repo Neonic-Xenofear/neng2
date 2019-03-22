@@ -27,6 +27,8 @@ protected:
     EPhysBodyType type; ///Body type
 
 public:
+    uint contanctsNum = 0;
+
     CExtData extData; ///Server gen data
 
     SSignal!( SVec2F ) onPosUpdated; ///Called when postion updated
@@ -129,6 +131,11 @@ public:
     */
     CShape2D[] getShapes() {
         return shapes;
+    }
+
+    @ScriptExport( "isCollide", MethodType.method, "", RetType.number )
+    bool isCollide() {
+        return contanctsNum > 0;
     }
 }
 

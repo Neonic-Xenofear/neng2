@@ -40,7 +40,9 @@ public:
         );
     }
 
-    void onLoad( CEngine engine ) {}
+    void onLoad( CEngine engine ) {
+        updateCollisionMasks();
+    }
 
     void onUnload( CEngine engine ) {
         foreach ( b2CBodyData data; objs ) {

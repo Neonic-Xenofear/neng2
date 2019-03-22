@@ -1,12 +1,14 @@
 module engine.core.engine.config;
 
 import std.conv;
+import std.variant;
 
 enum CONFIG_PATH_DECL = "(__path)";
 
 class CConfig {
 private:
     string[string] data;
+    Variant[string] variantData;
 
 public:
     string[string] getData() {
@@ -22,7 +24,7 @@ public:
         import engine.core.utils.path : appExePathAndNorm;
 
         //Process file path declarations
-        if ( val.startsWith( CONFIG_PATH_DECL ) ) {
+        if ( val.replace( " ", "" ).startsWith( CONFIG_PATH_DECL ) ) {
             string subVal = val;
             
             subVal = subVal.replace( CONFIG_PATH_DECL, "" );
@@ -80,5 +82,20 @@ public:
         }
 
         return float.min_normal;
+    }
+
+
+    //Variant values process
+    CConfig setV( T )( const string name, T val ) {
+        variantData[name] = Variant( val );
+        return this;
+    }
+
+    Variant getV( const string name ) {
+        if ( Variant* res = name in variantData ) {
+            return *res;
+        }
+
+        return Variant( null );
     }
 }

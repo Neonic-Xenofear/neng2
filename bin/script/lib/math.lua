@@ -1,6 +1,6 @@
 CMath = {}
 
-function CMath.lerp( a, b, t )
+function lerp( a, b, t )
     return a + ( b - a ) * t;
 end
 

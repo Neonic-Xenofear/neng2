@@ -22,5 +22,25 @@ class b2CCollisionListener : b2ContactListener {
 
         bodyUD1.onCollide( bodyUD2 );
         bodyUD2.onCollide( bodyUD1 );
+        
+        bodyUD1.bb2D.contanctsNum += 1;
+        bodyUD2.bb2D.contanctsNum += 1;
+    }
+
+    override void EndContact( b2Contact contact ) {
+        b2CBodyData bodyUD1 = cast( b2CBodyData )contact.GetFixtureA().GetBody().GetUserData();
+        if ( !bodyUD1 ) {
+            log.error( "Invalid body data" );
+            return;
+        }
+
+        b2CBodyData bodyUD2 = cast( b2CBodyData )contact.GetFixtureA().GetBody().GetUserData();
+        if ( !bodyUD2 ) {
+            log.error( "Invalid body data" );
+            return;
+        }
+        
+        bodyUD1.bb2D.contanctsNum -= 1;
+        bodyUD2.bb2D.contanctsNum -= 1;
     }
 }

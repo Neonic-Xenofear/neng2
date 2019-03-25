@@ -16,8 +16,10 @@ enum EAnchor {
 class CWidget : CNode2D {
     mixin( NODE_REG!() );
 public:
-    EAnchor[4] anchors; //Left, top, right, bottom
-    int[4] margins = [0, 0, 0, 0];
+    @Serialize {
+        EAnchor[4] anchors; ///Left, top, right, bottom
+        int[4] margins = [0, 0, 0, 0];
+    }
 
 protected:
     CTheme theme;
@@ -109,7 +111,7 @@ void updateRectByAnchorsAndMargins( ref SRect rect, SRect parentRect, EAnchor[4]
         }
     }
 
-    if ( margins[0] != 0 ) {
+    if ( margins[3] != 0 ) {
         if ( anchors[3] == EAnchor.A_BEGIN ) {
             rect.height = margins[3] - parentRect.height;
         } else {

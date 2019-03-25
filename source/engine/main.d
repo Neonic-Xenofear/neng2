@@ -82,13 +82,29 @@ private void test() {
 
     getEngine().sceneTree.addRootNode( stat );
 
-    CButton textbox = new CButton();
-    textbox.transform.pos = SVec2F( 400, 100 );
-    textbox.setText( "test" );
-    textbox.setRectWidth( 100 );
-    textbox.setRectHeight( 100 );
-    textbox.setNormalTexture( loadTexture( "resources/test/textures/test1.png" ) );
-    getEngine().sceneTree.addRootNode( textbox );
+    {
+        CButton textbox = new CButton();
+        textbox.transform.pos = SVec2F( 400, 100 );
+        textbox.setText( "test" );
+        textbox.setRectWidth( 100 );
+        textbox.setRectHeight( 100 );
+        textbox.setNormalTexture( loadTexture( "resources/test/textures/test1.png" ) );
+        textbox.margins = [20, 20, 20, 20];
+        textbox.anchors = [EAnchor.A_BEGIN, EAnchor.A_BEGIN, EAnchor.A_END, EAnchor.A_END];
+        getEngine().sceneTree.addRootNode( textbox );
+
+        CButton t = new CButton();
+        t.transform.pos = SVec2F( 400, 100 );
+        t.setText( "HELLLOOOOOOOO" );
+        t.setRectWidth( 100 );
+        t.setRectHeight( 100 );
+        t.setNormalTexture( loadTexture( "resources/test/textures/test1.png" ) );
+        t.margins = [50, 50, 50, 50];
+        t.anchors = [EAnchor.A_BEGIN, EAnchor.A_BEGIN, EAnchor.A_END, EAnchor.A_END];
+        textbox.addChild( t );
+    }
+
+
 
     CWindowGUI win = new CWindowGUI();
     win.setTitleTexture( loadTexture( "resources/test/textures/test1.png" ) );

@@ -8,7 +8,6 @@ import engine.core.engine.engine;
 
 struct SRegClass {
     TypeInfo_Class classInfo;
-    //bool bScriptRegistered = false;
 }
 
 class CClassDB : ASingleton!CClassDB {

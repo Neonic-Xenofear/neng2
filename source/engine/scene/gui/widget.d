@@ -78,6 +78,15 @@ public:
     }
 }
 
+/**
+    Calculate all rect values by anchors and margins
+    Params:
+        rect - setup rect
+        parentRect - parent rect
+        anchors - ancrhors
+        margins - margins
+*/
+///TODO: make it readable
 void updateRectByAnchorsAndMargins( ref SRect rect, SRect parentRect, EAnchor[4] anchors, int[4] margins ) {
     if ( margins[0] != 0 ) {
         if ( anchors[0] == EAnchor.A_BEGIN ) {
@@ -85,6 +94,8 @@ void updateRectByAnchorsAndMargins( ref SRect rect, SRect parentRect, EAnchor[4]
         } else {
             rect.pos.x = parentRect.pos.x + confGeti( "engine/app/window/width" ) - margins[0];
         }
+    } else {
+        rect.pos.x = parentRect.pos.x;
     }
 
     if ( margins[1] != 0 ) {
@@ -93,6 +104,8 @@ void updateRectByAnchorsAndMargins( ref SRect rect, SRect parentRect, EAnchor[4]
         } else {
             rect.pos.x = parentRect.pos.y + confGeti( "engine/app/window/height" ) - margins[1];
         }
+    } else {
+        rect.pos.y = parentRect.pos.y;
     }
 
     if ( margins[2] != 0 ) {
@@ -109,6 +122,14 @@ void updateRectByAnchorsAndMargins( ref SRect rect, SRect parentRect, EAnchor[4]
                 rect.width = 0;
             }
         }
+    } else if ( parentRect.width != 0 ) {
+        if ( anchors[2] == EAnchor.A_BEGIN ) {
+            rect.width = parentRect.width;
+        } else {
+            rect.width = parentRect.width - rect.pos.x;
+        }
+    } else {
+        rect.width = confGeti( "engine/app/window/width" ) - rect.pos.x;
     }
 
     if ( margins[3] != 0 ) {
@@ -125,5 +146,13 @@ void updateRectByAnchorsAndMargins( ref SRect rect, SRect parentRect, EAnchor[4]
                 rect.height = 0;
             }
         }
+    } else if ( parentRect.height != 0 ) {
+        if ( anchors[3] == EAnchor.A_BEGIN ) {
+            rect.height = parentRect.height;
+        } else {
+            rect.height = parentRect.height - rect.pos.y;
+        }
+    } else {
+        rect.height = confGeti( "engine/app/window/height" ) - rect.pos.y;
     }
 }

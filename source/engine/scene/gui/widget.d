@@ -21,11 +21,12 @@ public:
         int[4] margins = [0, 0, 0, 0];
     }
 
+    SRect rect;
+
 protected:
     CTheme theme;
     bool bFocused;
     bool bMouseFocus;
-    SRect rect;
 
 public:
     @ScriptExport( "", MethodType.ctor )
@@ -51,29 +52,13 @@ public:
         }
     }
 
-    void setRect( SRect nRect ) {
-        rect = nRect;
-    }
-
-    SRect getRect() {
-        return rect;
-    }
-
-    void setRectWidth( int width ) {
-        rect.width = width;
-    }
-
-    void setRectHeight( int height ) {
-        rect.height = height;
-    }
-
     SRect getGlobalRect() {
         if ( CWidget pW = cast( CWidget )parent ) {
-            updateRectByAnchorsAndMargins( rect, pW.getGlobalRect(), anchors, margins );
+            updateRect( rect, pW.getGlobalRect(), anchors, margins );
             return rect;
         }
 
-        updateRectByAnchorsAndMargins( rect, SRect( SVec2I( 0, 0 ), 0, 0 ), anchors, margins );
+        updateRect( rect, SRect( SVec2I( 0, 0 ), 0, 0 ), anchors, margins );
         return rect;
     }
 }
@@ -87,7 +72,7 @@ public:
         margins - margins
 */
 ///TODO: make it readable
-void updateRectByAnchorsAndMargins( ref SRect rect, SRect parentRect, EAnchor[4] anchors, int[4] margins ) {
+void updateRect( ref SRect rect, SRect parentRect, EAnchor[4] anchors, int[4] margins ) {
     if ( margins[0] != 0 ) {
         if ( anchors[0] == EAnchor.A_BEGIN ) {
             rect.pos.x = parentRect.pos.x + margins[0];
@@ -117,10 +102,6 @@ void updateRectByAnchorsAndMargins( ref SRect rect, SRect parentRect, EAnchor[4]
             } else {
                 rect.width = parentRect.width - margins[2] - rect.pos.x;
             }
-
-            if ( rect.width < 0 ) {
-                rect.width = 0;
-            }
         }
     } else if ( parentRect.width != 0 ) {
         if ( anchors[2] == EAnchor.A_BEGIN ) {
@@ -141,10 +122,6 @@ void updateRectByAnchorsAndMargins( ref SRect rect, SRect parentRect, EAnchor[4]
             } else {
                 rect.height = parentRect.height - margins[3] - rect.pos.y;
             }
-
-            if ( rect.height < 0 ) {
-                rect.height = 0;
-            }
         }
     } else if ( parentRect.height != 0 ) {
         if ( anchors[3] == EAnchor.A_BEGIN ) {
@@ -154,5 +131,13 @@ void updateRectByAnchorsAndMargins( ref SRect rect, SRect parentRect, EAnchor[4]
         }
     } else {
         rect.height = confGeti( "engine/app/window/height" ) - rect.pos.y;
+    }
+
+    if ( rect.width < 0 ) {
+        rect.width = 0;
+    }
+
+    if ( rect.height < 0 ) {
+        rect.height = 0;
     }
 }

@@ -7,11 +7,14 @@ import engine.core.utils.signal;
 
 class CButton : CWidget {
     mixin( NODE_REG!() );
+public:
+    @Serialize {
+        string text;
+    }
+
 protected:
     bool bPressed = false;
     bool bHovered = false;
-
-    string text;
 
     SResRef!CTexture normalTexture;
 

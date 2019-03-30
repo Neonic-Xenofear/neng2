@@ -43,3 +43,194 @@ abstract class ARender : IModule {
     void compileShader( CShader shader );
     void bindShader( CShader shader );
 }
+
+abstract class AProtectRender : ARender {
+    override void clearScreen() {
+        clearScreenImpl();
+    }
+
+    override void renderEnd() {
+        renderEndImpl();
+    }
+
+    override void genTextureData( CTexture texture ) {
+        if ( texture is null ) {
+            throw new Exception( "Trying to generate null texture" );
+        }
+
+        mixin( TLockObject!( texture ) );
+
+        if ( !texture.extData.isNull() ) {
+            throw new Exception( "Trying to generate null texture" );
+        }
+
+        genTextureDataImpl( texture );
+    }
+
+    override void destroyTextureData( CTexture texture ) {
+        if ( texture is null ) {
+            throw new Exception( "Trying to destroy null texture" );
+        }
+
+        mixin( TLockResource!( texture ) );
+        
+        if ( texture.extData.isNull() ) {
+            throw new Exception( "Trying destroy null render data" );
+        }
+
+        destroyTextureDataImpl( texture );
+    }
+
+    override void drawTexture2D( CTexture texture, SVec2F pos, SVec2F size, float angle, SColor4 modulate = SColor4.white, INodeCamera camera = null ) {
+        if ( texture is null ) {
+            throw new Exception( "Trying to draw null texture" );
+        }
+
+        mixin( TLockResource!( texture ) );
+
+        if ( texture.extData.isNull() ) {
+            throw new Exception( "Invalid texture render data" );
+        }
+
+        SVec2F resPos = pos;
+        SVec2F resSize = SVec2F( texture.width * size.x, texture.height * size.y );
+
+        //Convert position from world to screen coords
+        if ( camera ) {
+            resPos -= SVec2F( camera.getPos().x, camera.getPos().y );
+        }
+
+        //AABB clipping for not visible objects
+        {
+            SAABB textureAABB = SAABB(
+                SVec2F( resPos.x, resPos.y + resSize.y ),
+                SVec2F( resPos.x + resSize.x, resPos.y )
+            );
+    
+            if ( camera !is null ) {
+                if ( !camera.inView( textureAABB ) ) {
+                    return;
+                }
+            }
+        }
+
+        drawTexture2DImpl( texture, resPos, resSize, angle, modulate, camera );
+    }
+
+    override void drawTextureByRect2D( CTexture texture, SRect rect, float angle, SColor4 modulate = SColor4.white, INodeCamera camera = null ) {
+        if ( texture is null ) {
+            throw new Exception( "Trying to draw null texture" );
+        }
+
+        mixin( TLockResource!( texture ) );
+
+        if ( texture.extData.isNull() ) {
+            throw new Exception( "Invalid texture render data" );
+        }
+
+        SVec2F resPos = cast( SVec2F )rect.pos;
+        SVec2F resSize = SVec2F( rect.width, rect.height );
+
+        //Convert position from world to screen coords
+        if ( camera ) {
+            resPos -= SVec2F( camera.getPos().x, camera.getPos().y );
+        }
+
+        //AABB clipping for not visible objects
+        {
+            SAABB textureAABB = SAABB(
+                SVec2F( resPos.x, resPos.y + resSize.y ),
+                SVec2F( resPos.x + resSize.x, resPos.y )
+            );
+    
+            if ( camera !is null ) {
+                if ( !camera.inView( textureAABB ) ) {
+                    return;
+                }
+            }
+        }
+
+        rect.pos = cast( SVec2I )resPos;
+
+        drawTextureByRect2DImpl( texture, rect, angle, modulate, camera );
+    }
+
+    override void drawText( string text, SVec2I pos, SColor4 color ) {
+        drawTextImpl( text, pos, color );
+    }
+
+    override void drawLine2D( SVec2F start, SVec2F end, INodeCamera camera ) {
+        drawLine2DImpl( start, end, camera );
+    }
+
+    override void drawPoint2D( SVec2F pos, float radius, INodeCamera camera ) {
+        drawPoint2DImpl( pos, radius, camera );
+    }
+
+    override void genMeshData( CMesh mesh ) {
+        if ( mesh is null ) {
+            throw new Exception( "Trying to gen invalid mesh" );
+        }
+
+        mixin( TLockResource!( mesh ) );
+
+        if ( !mesh.extData.isNull() ) {
+            throw new Exception( "Mesh data already generated" );
+        }
+
+        genMeshDataImpl( mesh );
+    }
+
+    override void destroyMeshData( CMesh mesh ) {
+        if ( mesh is null ) {
+            throw new Exception( "Trying to destroy invalid mesh" );
+        }
+
+        mixin( TLockResource!( mesh ) );
+
+        if ( mesh.extData.isNull() ) {
+            throw new Exception( "Mesh data already destroyed" );
+        }
+
+        destroyMeshDataImpl( mesh );
+    }
+
+    override void setDrawColor( SColor4 color ) {
+        setDrawColorImpl( color );
+    }
+
+    override void compileShader( CShader shader ) {
+        mixin( TLockResource!( shader ) );
+
+        compileShaderImpl( shader );
+    }
+
+    override void bindShader( CShader shader ) {
+        if ( !checkResValid( shader ) ) {
+            return;
+        }
+
+        bindShaderImpl( shader );
+    }
+
+    void clearScreenImpl();
+    void renderEndImpl();
+
+    void genTextureDataImpl( CTexture texture );
+    void destroyTextureDataImpl( CTexture texture );
+    void drawTexture2DImpl( CTexture texture, SVec2F pos, SVec2F size, float angle, SColor4 modulate, INodeCamera camera );
+    void drawTextureByRect2DImpl( CTexture texture, SRect rect, float angle, SColor4 modulate, INodeCamera camera );
+
+    void drawTextImpl( string text, SVec2I pos, SColor4 color );
+    void drawLine2DImpl( SVec2F start, SVec2F end, INodeCamera camera );
+    void drawPoint2DImpl( SVec2F pos, float radius, INodeCamera camera );
+
+    /*   3D RENDERING   */
+    void genMeshDataImpl( CMesh mesh );
+    void destroyMeshDataImpl( CMesh mesh );
+
+    void setDrawColorImpl( SColor4 color );
+
+    void compileShaderImpl( CShader shader );
+    void bindShaderImpl( CShader shader );
+}

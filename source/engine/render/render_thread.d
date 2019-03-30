@@ -150,7 +150,7 @@ public:
 /**
     Mutltithreaded render
 */
-class CMTRender : ARender {
+class CMTRender : AProtectRender {
     CRenderThread thread;
 
     @property
@@ -178,34 +178,34 @@ class CMTRender : ARender {
         thread.endThread();
     }
 
-    override void clearScreen() {
+    override void clearScreenImpl() {
         thread.send( SRenderClearScreen() );
     }
 
-    override void renderEnd() {
+    override void renderEndImpl() {
         thread.send( SRenderRenderEnd() );
         thread.waitUntilRenderEnd();
     }
 
-    override void genTextureData( CTexture texture ) {
+    override void genTextureDataImpl( CTexture texture ) {
         thread.send( SRenderGenerateData( SEnvelope!CTexture( texture ) ) );
     }
 
-    override void destroyTextureData( CTexture texture ) {
+    override void destroyTextureDataImpl( CTexture texture ) {
         thread.send( SRenderDestroyData( SEnvelope!CTexture( texture ) ) );
         thread.waitUntil!SRenderDestroyDataEnd(); //Wait until data destroyed, it may take time
     }
 
-    override void genMeshData( CMesh mesh ) {
+    override void genMeshDataImpl( CMesh mesh ) {
         thread.send( SRenderGenMeshData( SEnvelope!CMesh( mesh ) ) );
     }
 
-    override void destroyMeshData( CMesh mesh ) {
+    override void destroyMeshDataImpl( CMesh mesh ) {
         thread.send( SRenderDestroyMeshData( SEnvelope!CMesh( mesh ) ) );
         thread.waitUntil!SRenderDestroyMeshDataEnd();
     }
 
-    override void drawTexture2D( CTexture texture, SVec2F pos, SVec2F size, float angle, SColor4 modulate = SColor4.white, INodeCamera camera = null ) {
+    override void drawTexture2DImpl( CTexture texture, SVec2F pos, SVec2F size, float angle, SColor4 modulate = SColor4.white, INodeCamera camera = null ) {
         thread.send( 
             SRenderDrawTexture2D( 
                 SEnvelope!CTexture( texture ), 
@@ -218,7 +218,7 @@ class CMTRender : ARender {
         );
     }
 
-    override void drawTextureByRect2D( CTexture texture, SRect rect, float angle, SColor4 modulate = SColor4.white, INodeCamera camera = null ) {
+    override void drawTextureByRect2DImpl( CTexture texture, SRect rect, float angle, SColor4 modulate = SColor4.white, INodeCamera camera = null ) {
         thread.send( 
             SRenderDrawTextureByRect2D( 
                 SEnvelope!CTexture( texture ), 
@@ -230,27 +230,27 @@ class CMTRender : ARender {
         );
     }
 
-    override void drawText( string text, SVec2I pos = SVec2I( 0, 0 ), SColor4 color = SColor4.white ) {
+    override void drawTextImpl( string text, SVec2I pos = SVec2I( 0, 0 ), SColor4 color = SColor4.white ) {
         thread.send( SRenderDrawText( text, pos, color ) );
     }
 
-    override void drawLine2D( SVec2F start, SVec2F end, INodeCamera camera = null ) {
+    override void drawLine2DImpl( SVec2F start, SVec2F end, INodeCamera camera = null ) {
         thread.send( SRenderDrawLine2D( start, end ) );
     }
 
-    override void drawPoint2D( SVec2F pos, float radius, INodeCamera camera = null ) {
+    override void drawPoint2DImpl( SVec2F pos, float radius, INodeCamera camera = null ) {
 
     }
 
-    override void setDrawColor( SColor4 color ) {
+    override void setDrawColorImpl( SColor4 color ) {
 
     }
 
-    override void compileShader( CShader shader ) {
+    override void compileShaderImpl( CShader shader ) {
         thread.send( SRenderCompileShader( SEnvelope!CShader( shader ) ) );
     }
 
-    override void bindShader( CShader shader ) {
+    override void bindShaderImpl( CShader shader ) {
         
     }
 }

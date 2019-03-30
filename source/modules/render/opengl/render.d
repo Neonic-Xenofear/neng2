@@ -181,16 +181,6 @@ public:
     }
 
     override void genTextureData( CTexture texture ) {
-        if ( texture is null ) {
-            throw new Exception( "Trying to generate null texture" );
-        }
-        
-        mixin( TLockResource!( texture ) );
-
-        if ( !texture.extData.isNull() ) {
-            throw new Exception( "Trying to generate already generated render info" );
-        }
-
         SDL_Surface* surf;
         AFile file = getVFS().getFile( texture.path );
 
@@ -253,67 +243,23 @@ public:
     }
 
     override void destroyTextureData( CTexture texture ) {
-        if ( texture is null ) {
-            throw new Exception( "Trying to destroy null texture" );
-        }
-
-        mixin( TLockResource!( texture ) );
-        
-        if ( texture.extData.isNull() ) {
-            throw new Exception( "Trying destroy null render data" );
-        }
-
         GLuint tex = texture.extData.as!GLuint;
         glDeleteTextures( 1, &tex );
         log.info( "Texture data destroyed: " ~ texture.path );
     }
 
-
-
     override void drawTexture2D( CTexture texture, SVec2F pos, SVec2F size, float angle, SColor4 modulate, INodeCamera camera ) {
-        if ( texture is null ) {
-            throw new Exception( "Trying to draw null texture" );
-        }
-
-        mixin( TLockResource!( texture ) );
-
-        if ( texture.extData.isNull() ) {
-            throw new Exception( "Invalid texture render data" );
-        }
-
-        SVec2F resPos = pos;
-        SVec2F resSize = SVec2F( texture.width * size.x, texture.height * size.y );
-
-        //Convert position from world to screen coords
-        if ( camera ) {
-            resPos -= SVec2F( camera.getPos().x, camera.getPos().y );
-        }
-
-        //AABB clipping for not visible objects
-        {
-            SAABB textureAABB = SAABB(
-                SVec2F( resPos.x, resPos.y + resSize.y ),
-                SVec2F( resPos.x + resSize.x, resPos.y )
-            );
-    
-            if ( camera !is null ) {
-                if ( !camera.inView( textureAABB ) ) {
-                    return;
-                }
-            }
-        }
-
         GLuint textureID = texture.extData.as!GLuint;
 
         bindShader( mainShader ); //Bind main draw shader
             SMat4F mat = SMat4F.identity();
-            mat.scale( SVec3F( resSize.x, resSize.y, 0.0f ) );
+            mat.scale( SVec3F( size.x, size.y, 0.0f ) );
 
-            mat.translate( SVec3F( -0.5f * resSize.x, -0.5f * resSize.y, 0.0f ) );
+            mat.translate( SVec3F( -0.5f * size.x, -0.5f * size.y, 0.0f ) );
             mat.rotateZ( angle );
-            mat.translate( SVec3F( 0.5f * resSize.x, 0.5f * resSize.y, 0.0f ) );
+            mat.translate( SVec3F( 0.5f * size.x, 0.5f * size.y, 0.0f ) );
 
-            mat.translate( SVec3F( resPos.x, resPos.y, 0.0f ) );
+            mat.translate( SVec3F( pos.x, pos.y, 0.0f ) );
 
             if ( mainShader !is null ) {
                 GLint transformLoc = glGetUniformLocation( mainShader.extData.as!GLuint, "model" );
@@ -330,49 +276,17 @@ public:
     }
 
     override void drawTextureByRect2D( CTexture texture, SRect rect, float angle, SColor4 modulate = SColor4.white, INodeCamera camera = null ) {
-        if ( texture is null ) {
-            throw new Exception( "Trying to draw null texture" );
-        }
-
-        mixin( TLockResource!( texture ) );
-
-        if ( texture.extData.isNull() ) {
-            throw new Exception( "Invalid texture render data" );
-        }
-
-        SVec2F resPos = cast( SVec2F )rect.pos;
-        SVec2F resSize = SVec2F( rect.width, rect.height );
-
-        //Convert position from world to screen coords
-        if ( camera ) {
-            resPos -= SVec2F( camera.getPos().x, camera.getPos().y );
-        }
-
-        //AABB clipping for not visible objects
-        {
-            SAABB textureAABB = SAABB(
-                SVec2F( resPos.x, resPos.y + resSize.y ),
-                SVec2F( resPos.x + resSize.x, resPos.y )
-            );
-    
-            if ( camera !is null ) {
-                if ( !camera.inView( textureAABB ) ) {
-                    return;
-                }
-            }
-        }
-
         GLuint textureID = texture.extData.as!GLuint;
 
         bindShader( mainShader ); //Bind main draw shader
             SMat4F mat = SMat4F.identity();
-            mat.scale( SVec3F( resSize.x, resSize.y, 0.0f ) );
+            mat.scale( SVec3F( rect.width, rect.height, 0.0f ) );
 
-            mat.translate( SVec3F( -0.5f * resSize.x, -0.5f * resSize.y, 0.0f ) );
+            mat.translate( SVec3F( -0.5f * rect.width, -0.5f * rect.height, 0.0f ) );
             mat.rotateZ( angle );
-            mat.translate( SVec3F( 0.5f * resSize.x, 0.5f * resSize.y, 0.0f ) );
+            mat.translate( SVec3F( 0.5f * rect.width, 0.5f * rect.height, 0.0f ) );
 
-            mat.translate( SVec3F( resPos.x, resPos.y, 0.0f ) );
+            mat.translate( SVec3F( rect.pos.x, rect.pos.y, 0.0f ) );
 
             if ( mainShader !is null ) {
                 GLint transformLoc = glGetUniformLocation( mainShader.extData.as!GLuint, "model" );
@@ -507,16 +421,6 @@ public:
     }
 
     override void genMeshData( CMesh mesh ) {
-        if ( mesh is null ) {
-            throw new Exception( "Trying to gen invalid mesh" );
-        }
-
-        mixin( TLockResource!( mesh ) );
-
-        if ( !mesh.extData.isNull() ) {
-            throw new Exception( "Mesh data already generated" );
-        }
-
         CMeshExtData extData = new CMeshExtData();
 
         glGenVertexArrays( 1, &extData.VAO );
@@ -550,16 +454,6 @@ public:
     }
 
     override void destroyMeshData( CMesh mesh ) {
-        if ( mesh is null ) {
-            throw new Exception( "Trying to destroy invalid mesh" );
-        }
-
-        mixin( TLockResource!( mesh ) );
-
-        if ( mesh.extData.isNull() ) {
-            throw new Exception( "Mesh data already destroyed" );
-        }
-
         CMeshExtData extData = cast( CMeshExtData )mesh.extData;
 
         if ( !extData ) {
@@ -578,8 +472,6 @@ public:
     }
 
     override void compileShader( CShader shader ) {
-        mixin( TLockResource!( shader ) );
-
         GLuint sVert;
         GLuint sFrag;
 
@@ -587,7 +479,7 @@ public:
         sFrag = glCreateShader( GL_FRAGMENT_SHADER );
 
         if ( shader.vertex.code != "" ) {
-            if ( !compileShader( shader.vertex.code, shader.vertex.path, sVert ) ) {
+            if ( !locCompileShader( shader.vertex.code, shader.vertex.path, sVert ) ) {
                 glDeleteShader( sVert );
                 glDeleteShader( sFrag );
                 shader.loadPhase = EResourceLoadPhase.RLP_FAILED;
@@ -595,7 +487,7 @@ public:
         }
 
         if ( shader.fragment.code != "" ) {
-            if ( !compileShader( shader.fragment.code, shader.fragment.path, sFrag ) ) {
+            if ( !locCompileShader( shader.fragment.code, shader.fragment.path, sFrag ) ) {
                 glDeleteShader( sVert );
                 glDeleteShader( sFrag );
                 shader.loadPhase = EResourceLoadPhase.RLP_FAILED;
@@ -641,7 +533,7 @@ private:
             path - file path, only for error information
             shader - result shader code
     */
-    bool compileShader( string code, string path, GLuint shader ) {
+    bool locCompileShader( string code, string path, GLuint shader ) {
         int len = cast( int )code.length;
         const( char* ) src = toStringz( code );
         glShaderSource( shader, 1, &src, &len );

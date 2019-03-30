@@ -9,6 +9,11 @@ enum EAnchor {
     A_END
 }
 
+struct SWidgetCache {
+    STransform2D transform;
+    SVec2I winSize;
+}
+
 /**
     Base class of all widgets
 */
@@ -27,6 +32,8 @@ protected:
     CTheme theme;
     bool bFocused;
     bool bMouseFocus;
+
+    SWidgetCache cache;
 
 public:
     @ScriptExport( "", MethodType.ctor )
@@ -53,12 +60,20 @@ public:
     }
 
     SRect getGlobalRect() {
-        if ( CWidget pW = cast( CWidget )parent ) {
-            updateRect( rect, pW.getGlobalRect(), anchors, margins );
-            return rect;
+        SVec2I winSize = SVec2I( confGeti( "engine/app/window/width" ), confGeti( "engine/app/window/height" ) );
+        const bool bCacheInvalid = ( cache.transform != transform ) || ( cache.winSize != winSize );
+
+        if ( bCacheInvalid ) {
+            if ( CWidget pW = cast( CWidget )parent ) {
+                updateRect( rect, pW.getGlobalRect(), anchors, margins );
+            } else {
+                updateRect( rect, SRect.nul, anchors, margins );
+            }
+
+            cache.transform = transform;
+            cache.winSize = winSize;
         }
 
-        updateRect( rect, SRect( SVec2I( 0, 0 ), 0, 0 ), anchors, margins );
         return rect;
     }
 }
@@ -73,6 +88,7 @@ public:
 */
 ///TODO: make it readable
 void updateRect( ref SRect rect, SRect parentRect, EAnchor[4] anchors, int[4] margins ) {
+    log.warning( margins );
     if ( margins[0] != 0 ) {
         if ( anchors[0] == EAnchor.A_BEGIN ) {
             rect.pos.x = parentRect.pos.x + margins[0];

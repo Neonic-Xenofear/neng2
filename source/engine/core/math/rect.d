@@ -6,6 +6,8 @@ struct SRect {
     SVec2I pos;
     int width;
     int height;
+
+    static SRect nul = SRect( SVec2I( 0, 0 ), 0, 0 );
 }
 
 bool isInRect( SRect rect, SVec2I pos ) {

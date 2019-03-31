@@ -36,12 +36,6 @@ public:
     }
 
     override void onDraw( INodeCamera camera ) {
-        if ( margins == [0, 0, 0, 0] ) {
-            rect.pos = cast( SVec2I )getGlobalPos();
-        } else {
-            rect = getGlobalRect();
-        }
-
         if ( text.length > 0 ) {
             SColor4 col = SColor4.white;
             if ( bHovered ) {

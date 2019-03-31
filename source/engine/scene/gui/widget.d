@@ -59,22 +59,45 @@ public:
         }
     }
 
-    SRect getGlobalRect() {
-        SVec2I winSize = SVec2I( confGeti( "engine/app/window/width" ), confGeti( "engine/app/window/height" ) );
-        const bool bCacheInvalid = ( cache.transform != transform ) || ( cache.winSize != winSize );
+    override void onUpdate( float delta ) {
+        updateRect();
+    }
 
-        if ( bCacheInvalid ) {
-            if ( CWidget pW = cast( CWidget )parent ) {
-                updateRect( rect, pW.getGlobalRect(), anchors, margins );
-            } else {
-                updateRect( rect, SRect.nul, anchors, margins );
-            }
+    void updateRect() {
+        if ( !isCacheValid() && !( isNullMargins() && isBeginAnchors() ) ) {
+            updateRectProcess();
+        }
+    }
 
-            cache.transform = transform;
-            cache.winSize = winSize;
+    bool isCacheValid() {
+        const SVec2I winSize = SVec2I( confGeti( "engine/app/window/width" ), confGeti( "engine/app/window/height" ) );
+        return ( cache.transform == transform ) && ( cache.winSize == winSize );
+    }
+
+    bool isNullMargins() {
+        return margins == [0, 0, 0, 0];
+    }
+
+    bool isBeginAnchors() {
+        return anchors == [EAnchor.A_BEGIN, EAnchor.A_BEGIN, EAnchor.A_BEGIN, EAnchor.A_BEGIN];
+    }
+
+protected:
+    void updateRectProcess() {
+        if ( CWidget pW = cast( CWidget )parent ) {
+            calculateRect( rect, pW.rect, anchors, margins );
+        } else {
+            calculateRect( rect, SRect.nul, anchors, margins );
         }
 
-        return rect;
+        cache.transform = transform;
+        cache.winSize = SVec2I( confGeti( "engine/app/window/width" ), confGeti( "engine/app/window/height" ) );
+
+        foreach ( CNode node; children ) {
+            if ( CWidget wid = cast( CWidget )node ) {
+                wid.updateRectProcess();
+            }
+        }
     }
 }
 
@@ -87,8 +110,7 @@ public:
         margins - margins
 */
 ///TODO: make it readable
-void updateRect( ref SRect rect, SRect parentRect, EAnchor[4] anchors, int[4] margins ) {
-    log.warning( margins );
+void calculateRect( ref SRect rect, SRect parentRect, EAnchor[4] anchors, int[4] margins ) {
     if ( margins[0] != 0 ) {
         if ( anchors[0] == EAnchor.A_BEGIN ) {
             rect.pos.x = parentRect.pos.x + margins[0];
@@ -96,7 +118,11 @@ void updateRect( ref SRect rect, SRect parentRect, EAnchor[4] anchors, int[4] ma
             rect.pos.x = parentRect.pos.x + confGeti( "engine/app/window/width" ) - margins[0];
         }
     } else {
-        rect.pos.x = parentRect.pos.x;
+        if ( anchors[0] == EAnchor.A_BEGIN ) {
+            rect.pos.x = parentRect.pos.x;
+        } else {
+            rect.pos.x = parentRect.pos.x + parentRect.width;
+        }
     }
 
     if ( margins[1] != 0 ) {
@@ -106,7 +132,11 @@ void updateRect( ref SRect rect, SRect parentRect, EAnchor[4] anchors, int[4] ma
             rect.pos.x = parentRect.pos.y + confGeti( "engine/app/window/height" ) - margins[1];
         }
     } else {
-        rect.pos.y = parentRect.pos.y;
+        if ( anchors[0] == EAnchor.A_BEGIN ) {
+            rect.pos.y = parentRect.pos.y;
+        } else {
+            rect.pos.y = parentRect.pos.y + parentRect.height;
+        }
     }
 
     if ( margins[2] != 0 ) {

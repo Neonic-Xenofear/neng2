@@ -89,11 +89,11 @@ private void test() {
         textbox.rect.width = 100;
         textbox.rect.height = 100;
         textbox.setNormalTexture( loadTexture( "resources/textures/tex_black_1pix.png" ) );
-        textbox.margins = [0, 0, 200, 0];
-        textbox.anchors = [EAnchor.A_BEGIN, EAnchor.A_BEGIN, EAnchor.A_BEGIN, EAnchor.A_END];
+        textbox.margins = [0, 0, 100, 0];
+        textbox.anchors = [EAnchor.A_BEGIN, EAnchor.A_BEGIN, EAnchor.A_BEGIN, EAnchor.A_BEGIN];
         getEngine().sceneTree.addRootNode( textbox );
 
-        CButton t = new CButton();
+        /*CButton t = new CButton();
         t.transform.pos = SVec2F( 400, 100 );
         t.text = "HELLLOOOOOOOO";
         t.rect.width = 100;
@@ -101,7 +101,7 @@ private void test() {
         t.setNormalTexture( loadTexture( "resources/test/textures/test1.png" ) );
         t.margins = [0, 50, 0, 50];
         t.anchors = [EAnchor.A_BEGIN, EAnchor.A_BEGIN, EAnchor.A_END, EAnchor.A_END];
-        textbox.addChild( t );
+        textbox.addChild( t );*/
     }
 
 

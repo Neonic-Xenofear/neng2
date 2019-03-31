@@ -113,7 +113,7 @@ private void test() {
     win.rect.height = 400;
     getEngine().sceneTree.addRootNode( win );
 
-    SSceneTreeSerializer serializer;
+    /*SSceneTreeSerializer serializer;
     CNode node = new CNode();
     foreach ( CNode n; getEngine().sceneTree.getRootNodes() ) {
         node.addChild( n );
@@ -122,7 +122,7 @@ private void test() {
     getVFS().getRootDir().getFile( "debug/test_refl.sdl" ).writeRawData( cast( ubyte[] )serializer.toString() );
 
     CMesh mesh = loadMesh( "" );
-    mesh.queueFree();
+    mesh.queueFree();*/
 
     /*CNode resNode = new CNode();
     SSceneDeserializer des = SSceneDeserializer( cast( string )getVFS().getRootDir().getFile( "debug/test_refl.sdl" ).readRawData( ) );

@@ -182,9 +182,7 @@ public:
 
     override void genTextureData( CTexture texture ) {
         SDL_Surface* surf;
-        AFile file = getVFS().getFile( texture.path );
 
-        log.info( "Generate texture render data " ~ file.fullPath );
         SDL_RWops* rw = SDL_RWFromMem( texture.data.ptr, cast( int )( texture.data.length * ubyte.sizeof ) );
         if ( !rw ) {
             return;
@@ -193,15 +191,8 @@ public:
         surf = IMG_Load_RW( rw, 1 );
 
         if ( surf is null ) {
-            log.error( "IMG_Load_RW: " ~ to!string( IMG_GetError() ) ~ "\n\t" ~ file.fullPath );
-
-            log.info( "Loading texture from OS fs: " ~ file.fullPath );
-            surf = IMG_Load( toStringz( file.physPath ) );
-
-            if ( surf is null ) {
-                log.error( "IMG_Load: " ~ to!string( IMG_GetError() ) ~ "\n\t" ~ file.fullPath );
-                return;
-            }
+            log.error( "IMG_Load_RW: " ~ to!string( IMG_GetError() ) ~ "\n\t" ~ texture.path );
+            return;
         }
 
         texture.width = surf.w;
@@ -241,7 +232,7 @@ public:
         texture.extData = textureID;
         SDL_FreeSurface( surf );
 
-        log.info( "Render texture data generated " ~ file.fullPath );
+        log.info( "Render texture data generated " ~ texture.path );
     }
 
     override void destroyTextureData( CTexture texture ) {

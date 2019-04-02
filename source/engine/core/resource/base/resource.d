@@ -145,6 +145,11 @@ public:
         return isValidRaw() && isValidImpl();
     }
 
+    override bool canBeAddedToQueueFree() {
+        import engine.core.engine.engine : getResourceManager;
+        return !getResourceManager().isStaticResource( this );
+    }
+
 protected:
     /**
         Informate about resource

@@ -22,6 +22,8 @@ void main() {
         bencFunc!( { CModuleManager.get().loadModules( EModuleInitPhase.MIP_POST ); } )( "MODULES_POST_INIT" );
         getEngine().initWindow();
         getEngine().render = new CMTRender();
+
+        loadStaticResources( getVFS().getFile( "resources/configs/static_resources.sdl" ) );
     log.info( "ENGINE INIT END" );
 
     log.info( "ENGINE START MAIN LOOP" );
@@ -66,6 +68,22 @@ private void loadEngineConfig( AFile iFile ) {
     cF.destroy();
 
     log.info( "Config loaded" );
+}
+
+private void loadStaticResources( AFile confFile ) {
+    if ( confFile is null ) {
+        log.error( "Invalid config file!" );
+        return;
+    }
+
+    CSDLang cF = new CSDLang();
+    cF.parseFile( confFile );
+
+    foreach ( f; cF.getTag( "static_resources" ).getTag( "textures" ).tags ) {
+        getResourceManager().loadResource!CTexture( f.values[0].to!string );
+    }
+
+    cF.destroy();
 }
 
 private void test() {

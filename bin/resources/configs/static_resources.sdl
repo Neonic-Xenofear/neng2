@@ -1,0 +1,6 @@
+static_resources {
+    textures {
+        "resources/textures/tex_white_1pix.png"
+        "resources/textures/tex_black_1pix.png"
+    }
+}

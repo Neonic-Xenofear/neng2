@@ -16,11 +16,17 @@ enum FILE_META_EXT = ".meta";
 class CResourceManager {
 private:
     AResource[] resources;
+    AResource[] staticResources; //Such resources will be unloaded only after engine shutdown
+
     IResourceLoader[string] loaders;
 
 public:
     ~this() {
         foreach ( res; resources ) {
+            res.destroy();
+        }
+
+        foreach ( res; staticResources ) {
             res.destroy();
         }
 
@@ -159,6 +165,16 @@ public:
         SSerializer serial;
         res.serialize( serial );
         return serial.toString();
+    }
+
+    void addStaticResource( AResource res ) {
+        if ( res ) {
+            staticResources ~= res;
+        }
+    }
+
+    bool isStaticResource( AResource res ) {
+        return staticResources.canFind( res );
     }
 
 private:

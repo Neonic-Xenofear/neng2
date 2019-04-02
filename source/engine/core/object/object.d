@@ -143,6 +143,13 @@ public:
         return typeof( this ).stringof;
     }
 
+    /**
+        Override for custrom logic
+    */
+    bool canBeAddedToQueueFree() {
+        return true;
+    }
+
 private:
     mixin genObjectSerializeFunc!( serializeMember, SSerializer, "serialize" );
     mixin genObjectSerializeFunc!( deserializeMember, SDeserializer, "deserialize" );
@@ -178,8 +185,8 @@ public:
 
     void addObjectToQueue( AObject obj ) {
         import std.algorithm : canFind;
-
-        if ( !queue.canFind( obj ) ) {
+        
+        if ( !queue.canFind( obj ) && obj.canBeAddedToQueueFree() ) {
             queue ~= obj;
         }
     }

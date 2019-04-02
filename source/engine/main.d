@@ -80,7 +80,9 @@ private void loadStaticResources( AFile confFile ) {
     cF.parseFile( confFile );
 
     foreach ( f; cF.getTag( "static_resources" ).getTag( "textures" ).tags ) {
-        getResourceManager().loadResource!CTexture( f.values[0].to!string );
+        getResourceManager.addStaticResource( 
+            getResourceManager().loadResource!CTexture( f.values[0].to!string )
+        );
     }
 
     cF.destroy();

@@ -17,7 +17,7 @@ Signal names: camelCase.
 ```D
 class CMyClass {
 private:
-    int _magicNumber;
+    int magicNumber;
 
 public:
     @property 

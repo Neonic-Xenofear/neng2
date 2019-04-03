@@ -116,6 +116,7 @@ protected:
         if ( !exists( resPath ) ) {
             try {
                 mkdir( resPath );
+                log.info( "Created dir: " ~ resPath );
             } catch ( FileException e ) {
                 throw e;
             }
@@ -123,8 +124,6 @@ protected:
 
         CDiskDir nDir = new CDiskDir( i_name, resPath, this );
         appendDir( nDir );
-
-        CLogger.get().info( "Created dir: " ~ resPath );
 
         return nDir;
     }

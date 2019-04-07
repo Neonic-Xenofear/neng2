@@ -11,14 +11,16 @@ import engine.core.utils.signal;
 */
 struct SResRef( T )
 if ( is( T : AResource ) ) {
+public:
+    T resource; ///Resource instance
+
+    SSignal!() onDeserialized;
+
 protected:
     string metaFilePath;
 
 public:
-    T resource; ///Resource instance
     alias resource this;
-
-    SSignal!() onDeserialized;
 
     this( T res ) {
         resource = res;

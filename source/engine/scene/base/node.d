@@ -50,17 +50,15 @@ template NODE_REG() {
 class CNode : AObject {
     mixin( TRegisterObject!() );
 public:
-    @Serialize
-    bool bVisible = true;
-    @Serialize
-    string name;
+    @Serialize {
+        bool bVisible = true;
+        string name;
 
-    @Serialize
-    CNode parent;
-    @Serialize
-    CNode[] children;
+        CNode parent;
+        CNode[] children;
 
-    SColor4 modulateColor = SColor4.white; 
+        SColor4 modulateColor = SColor4.white; 
+    }
 
 protected:
     @Serialize

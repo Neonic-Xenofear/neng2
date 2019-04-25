@@ -77,9 +77,20 @@ protected:
 
     override void resizeImpl( int iWidth, int iHeight ) {}
 
+    override void setIcon( AFile file ) {
+        if ( !file ) {
+            log.error( "Invalid window icon path!" );
+            return;
+        }
+    }
+
 public:
     override void close() {
         SDL_DestroyWindow( appWin );
+
+        DerelictSDL2TTF.unload();
+        DerelictSDL2Image.unload();
+        DerelictSDL2.unload();
     }
 
     override void swapBuffers() {

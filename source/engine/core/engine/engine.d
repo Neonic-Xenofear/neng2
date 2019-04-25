@@ -58,14 +58,22 @@ public:
     }
 
     ~this() {
-        getEngine().sceneTree.destroy();
+        CModuleManager.get().unloadModules( EModuleDestroyPhase.MDP_BEFORE_SCENE_TREE );
+        sceneTree.destroy();
 
         resourceManager.destroy();
         CObjectsQueueFree.get().destroy();
 
-        getRender().destroy();
-        CModuleManager.get().unloadModules();
-        getEngine().scriptManager.destroy();
+        //Correct unload render
+        if ( !confGetb( "engine/modules/render/thread" ) ) {
+            CModuleManager.get().removeModule( render );
+        }
+        CModuleManager.get().unloadModules( EModuleDestroyPhase.MDP_BEFORE_RENDER );
+        render.destroy();
+        window.destroy();
+        
+        CModuleManager.get().unloadModules( EModuleDestroyPhase.MDP_NORMAL );
+        scriptManager.destroy();
     }
 
     void initWindow() {
@@ -91,8 +99,12 @@ public:
         }
     }
 
-    void initMainLoopThread() {
-        mainLoop();
+    void initRender() {
+        if ( !confGetb( "engine/modules/render/thread" ) ) {
+            render = CModuleManager.get().getModule!ARender( confGets( "engine/modules/render" ) );
+        } else {
+            render = new CMTRender();
+        }
     }
 
     void mainLoop() {
@@ -128,7 +140,6 @@ public:
 
     void updateProcess( float delta ) {
         render.clearScreen();
-
         sceneTree.update( delta );
         
         debug drawInfo( delta );
@@ -136,7 +147,6 @@ public:
         CModuleManager.get().update( EModuleUpdate.MU_NORMAL, delta );
 
         render.renderEnd();
-        window.swapBuffers();
     }
 
     void setFramePerSecond( int val ) {

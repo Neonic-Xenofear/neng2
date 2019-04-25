@@ -51,10 +51,10 @@ struct SObjectLock {
     Params:
         T - object var
 */
-template TLockObject( alias T ) {
+template TScopeLockObject( alias T ) {
     import std.string : format;
 
-    enum TLockObject = 
+    enum TScopeLockObject = 
     format( 
         q{
             //assert( !(%1$s).isLocked(), "Trying to process locked object" );

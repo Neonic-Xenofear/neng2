@@ -4,31 +4,23 @@ import engine.core.mod;
 
 import engine.framework.console.cvar;
 
-alias consoleFunc = void function( CVar[string] args );
+alias TConsoleFunc = void function( CVar[string] args );
 
 class CConsole : IModule {
 protected:
     CVar[string] vars;
-    consoleFunc[string] funcs;
+    TConsoleFunc[string] funcs;
 
 public:
-    @property
     SModuleInfo info() {
         return SModuleInfo(
             "CONSOLE", 
-            "NENG2", 
-            "regular"
+            "NENG2_FRAMEWORK", 
+            "1.0",
+            EModuleInitPhase.MIP_NORMAL,
+            EModuleDestroyPhase.MDP_NORMAL,
+            EModuleUpdate.MU_NORMAL
         );
-    }
-
-    @property
-    EModuleUpdate updateInfo() {
-        return EModuleUpdate.MU_NONE;
-    }
-
-    @property
-    EModuleInitPhase initPhase() {
-        return EModuleInitPhase.MIP_NORMAL;
     }
 
     void onLoad( CEngine engine ) {}
@@ -46,7 +38,7 @@ public:
     }
 
     void execFunc( string funcName, string[] args ) {
-        if ( consoleFunc* f = funcName in funcs ) {
+        if ( TConsoleFunc* f = funcName in funcs ) {
             CVar[string] entArgs;
             foreach ( string i; args ) {
                 if ( CVar* v = i in vars ) {
@@ -61,8 +53,8 @@ public:
         }
     }
 
-    void registerFunc( consoleFunc func, string funcName ) {
-        if ( consoleFunc* f = funcName in funcs ) {
+    void registerFunc( TConsoleFunc func, string funcName ) {
+        if ( TConsoleFunc* f = funcName in funcs ) {
             log.error( "Console command name registered: " ~ funcName );
             return;
         }

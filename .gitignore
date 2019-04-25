@@ -23,3 +23,4 @@ neng2-test-*
 .vscode
 
 bin/resources/test/
+test/

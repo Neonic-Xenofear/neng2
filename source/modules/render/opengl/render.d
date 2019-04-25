@@ -54,12 +54,14 @@ private:
     int[2] currWinSize;
 
 public:
-    @property
     SModuleInfo info() {
         return SModuleInfo(
             "OPENGL_RENDER",
-            "MAPLE_CORE", 
-            "1.0"
+            "NENG2_CORE", 
+            "1.0",
+            EModuleInitPhase.MIP_UPON_REQUEST,
+            EModuleDestroyPhase.MDP_NORMAL,
+            EModuleUpdate.MU_NORMAL,
         );
     }
     
@@ -136,6 +138,8 @@ public:
         SDL_Quit();
         IMG_Quit();
         TTF_Quit();
+
+        DerelictGL3.unload();
     }
 
     void update( float delta ) {

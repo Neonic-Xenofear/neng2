@@ -50,7 +50,7 @@ struct ResourceLoadType {
     EResourceLoadingType type;
 }
 
-alias TLockResource = TLockObject;
+alias TLockResource = TScopeLockObject;
 
 /**
     Engine resource object, used for 

@@ -2,21 +2,6 @@ module engine.framework.rgui.rgui;
 
 public import engine.core.mod.imod;
 
-template TDefaultRGUI() {
-    enum TDefaultRGUI =
-    q{
-        @property
-        EModuleUpdate updateInfo() {
-            return EModuleUpdate.MU_NONE;
-        }
-
-        @property
-        EModuleInitPhase initPhase() {
-            return EModuleInitPhase.MIP_UPON_REQUEST;
-        }
-    };
-}
-
 interface IRuntimeGUI : IModule {
     void newFrame();
     void endFrame();

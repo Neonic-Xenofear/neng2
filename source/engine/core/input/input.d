@@ -6,23 +6,15 @@ public import engine.core.input.keyboard;
 public import engine.core.input.mouse;
 
 class CInput : IModule {
-    @property
     SModuleInfo info() {
         return SModuleInfo( 
             "UNIMPLEMENTED_INPUT",
             "NENG2", 
-            "1.0"
+            "1.0",
+            EModuleInitPhase.MIP_UPON_REQUEST,
+            EModuleDestroyPhase.MDP_NORMAL,
+            EModuleUpdate.MU_NORMAL,
         );
-    }
-
-    @property
-    final EModuleUpdate updateInfo() {
-        return EModuleUpdate.MU_NORMAL;
-    }
-
-    @property
-    final EModuleInitPhase initPhase() {
-        return EModuleInitPhase.MIP_UPON_REQUEST;
     }
 
     void onLoad( CEngine engine ) {}

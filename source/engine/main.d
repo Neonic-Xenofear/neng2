@@ -4,6 +4,12 @@ import engine;
 import modules;
 
 void main() {
+    log.info( "CORE INIT START" );
+        bencFunc!( { 
+            initCore();
+        } )( "CORE INIT" );
+    log.info( "CORE INIT END" );
+
     log.info( "ENGINE INIT START" );
         bencFunc!( { 
             initFS();
@@ -20,15 +26,17 @@ void main() {
         bencFunc!( { CModuleManager.get().loadModules( EModuleInitPhase.MIP_NORMAL ); } )( "MODULES_NORMAL_INIT" );
         getEngine().updateModules();
         bencFunc!( { CModuleManager.get().loadModules( EModuleInitPhase.MIP_POST ); } )( "MODULES_POST_INIT" );
+
         getEngine().initWindow();
-        getEngine().render = new CMTRender();
+        getEngine().initRender();
 
         loadStaticResources( getVFS().getFile( "resources/configs/static_resources.sdl" ) );
+        getEngine().window.setIcon( getVFS().getFile( confGets( "engine/app/window/icon" ) ) );
     log.info( "ENGINE INIT END" );
 
     log.info( "ENGINE START MAIN LOOP" );
         test();
-        getEngine().initMainLoopThread();
+        getEngine().mainLoop();
     log.info( "ENGINE END MAIN LOOP" );
 
     //Engine shutdown
@@ -132,7 +140,6 @@ private void test() {
     win.rect.width = 200;
     win.rect.height = 400;
     getEngine().sceneTree.addRootNode( win );
-
     /*SSceneTreeSerializer serializer;
     CNode node = new CNode();
     foreach ( CNode n; getEngine().sceneTree.getRootNodes() ) {

@@ -11,16 +11,6 @@ public import engine.scene.base;
 public import engine.render.shader;
 
 abstract class ARender : IModule {
-    @property
-    final EModuleUpdate updateInfo() {
-        return EModuleUpdate.MU_NORMAL;
-    }
-
-    @property
-    final EModuleInitPhase initPhase() {
-        return EModuleInitPhase.MIP_UPON_REQUEST;
-    }
-
     void clearScreen();
     void renderEnd();
 
@@ -58,7 +48,7 @@ abstract class AProtectRender : ARender {
             throw new Exception( "Trying to generate null texture" );
         }
 
-        mixin( TLockObject!( texture ) );
+        mixin( TLockResource!( texture ) );
 
         if ( !texture.extData.isNull() ) {
             throw new Exception( "Trying to generate null texture" );
@@ -82,6 +72,11 @@ abstract class AProtectRender : ARender {
     }
 
     override void drawTexture2D( CTexture texture, SVec2F pos, SVec2F size, float angle, SColor4 modulate = SColor4.white, INodeCamera camera = null ) {
+        //Ignore null size
+        if ( size.x == 0 || size.y == 0 ) {
+            return;
+        }
+
         if ( texture is null ) {
             throw new Exception( "Trying to draw null texture" );
         }
@@ -118,6 +113,11 @@ abstract class AProtectRender : ARender {
     }
 
     override void drawTextureByRect2D( CTexture texture, SRect rect, float angle, SColor4 modulate = SColor4.white, INodeCamera camera = null ) {
+        //Ignore null size
+        if ( rect.width == 0 || rect.height == 0 ) {
+            return;
+        }
+
         if ( texture is null ) {
             throw new Exception( "Trying to draw null texture" );
         }

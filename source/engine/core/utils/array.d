@@ -6,12 +6,15 @@ public import std.string;
 /**
     Remove element from array
 */
-static void removeElement( T )( ref T[] i_arr, T i_elem ) {
+static bool removeElement( T )( ref T[] i_arr, T i_elem ) {
     auto index = countUntil( i_arr, i_elem );
 
-    if ( index != -1 ) {
-        i_arr = remove( i_arr, index );
+    if ( index == -1 ) {
+        return false;
     }
+
+    i_arr = remove( i_arr, index );
+    return true;
 }
 
 /**

@@ -26,6 +26,7 @@ public:
 
     ~this() {
         onResized.disconnectAll();
+        close();
     }
 
     void setup( string name, int iWidth, int iHeight ) {        
@@ -58,6 +59,7 @@ public:
     abstract void* createRenderContext( ERenderContext renderContext );
 
     abstract void setVSync( bool bVal );
+    abstract void setIcon( AFile file );
 
 protected:
     abstract void setupImpl( string name, int width, int height );

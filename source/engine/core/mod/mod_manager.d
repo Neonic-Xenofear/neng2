@@ -8,12 +8,15 @@ import engine.core.utils.singleton;
 import engine.app.logger;
 import engine.core.engine.engine;
 public import engine.core.vfs.vfs;
+import engine.core.utils.array : removeElement;
 
 /**
     Module adapter in CModuleManager
 */
 class CValidModule {
     IModule inst; ///Module instance
+
+    string name;    ///Cache module name for debug
     bool bInitialized = false; ///If initialized
 }
 
@@ -40,6 +43,7 @@ public:
 
         CValidModule res = new CValidModule();
         res.inst = mod;
+        res.name = mod.info.name;
 
         log.info( "Module added: ", mod.info.name );
         modules ~= res;
@@ -56,7 +60,7 @@ public:
     T getModule( T : IModule )( string name ) {
         foreach ( CValidModule mod; modules ) {
             if ( mod.inst.info.name == name ) {
-                if ( mod.inst.initPhase == EModuleInitPhase.MIP_UPON_REQUEST && !mod.bInitialized ) {
+                if ( mod.inst.info.initPhase == EModuleInitPhase.MIP_UPON_REQUEST && !mod.bInitialized ) {
                     mod.inst.onLoad( getEngine() );
                     mod.bInitialized = true;
                 }
@@ -74,8 +78,6 @@ public:
             mod - module.
     */
     void removeModule( T : IModule )( T mod ) {
-        import engine.core.utils.array : removeElement;
-
         if ( !mod ) {
             return;
         }
@@ -115,7 +117,7 @@ public:
     */
     void loadModules( EModuleInitPhase phase ) {
         foreach ( CValidModule mod; modules ) {
-            if ( mod.bInitialized || mod.inst.initPhase != phase ) {
+            if ( mod.bInitialized || mod.inst.info.initPhase != phase ) {
                 continue;
             }
 
@@ -127,7 +129,7 @@ public:
     /**
         Unload and destroy all modules.
     */
-    void unloadModules() {
+    void unloadModules( EModuleDestroyPhase destroyPhase ) {
         foreach ( CValidModule mod; modules ) {
             //Just skip all invalid modules
             if ( !mod ) {
@@ -135,12 +137,17 @@ public:
             }
 
             if ( !mod.inst ) {
-                log.info( "Invlaid instance module unloaded" );
+                log.info( "Invlaid instance module unloaded" ~ mod.name );
                 mod.destroy();
                 continue;
             }
 
+            if ( mod.inst.info.destroyPhase != destroyPhase ) {
+                continue;
+            }
+
             mod.inst.onUnload( getEngine );
+
             log.info( "Module unloaded: ", mod.inst.info.name );
 
             mod.inst.destroy();
@@ -156,12 +163,12 @@ public:
     */
     void update( EModuleUpdate updateInfo, float delta ) {
         foreach ( CValidModule mod; modules ) {
-            if ( mod.inst.updateInfo == EModuleUpdate.MU_ALWAYS ) {
+            if ( mod.inst.info.updateInfo == EModuleUpdate.MU_ALWAYS ) {
                 mod.inst.update( delta );
                 continue;
             }
 
-            if ( mod.inst.updateInfo == updateInfo && mod.bInitialized ) {
+            if ( mod.inst.info.updateInfo == updateInfo && mod.bInitialized ) {
                 mod.inst.update( delta );
             }
         }

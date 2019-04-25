@@ -13,7 +13,10 @@ class CSDLInput : CInput {
         return SModuleInfo( 
             "SDL_INPUT",
             "NENG2", 
-            "1.0"
+            "1.0",
+            EModuleInitPhase.MIP_UPON_REQUEST,
+            EModuleDestroyPhase.MDP_NORMAL,
+            EModuleUpdate.MU_NORMAL
         );
     }
 

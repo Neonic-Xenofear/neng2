@@ -3,30 +3,40 @@ module engine.core.mod.lib_module;
 public import engine.core.mod.imod;
 import derelict.util.sharedlib;
 
+alias TGetModuleImpl = extern(C) nothrow IModule function();
+enum MODULE_IMPL_NAME = "getModule";
+
 /**
 
 */
 class CLibModule {
     SharedLib lib;
     IModule mod;
-    FGetModuleImpl loadImpl;
+    TGetModuleImpl loadImpl;
 
     void loadFromFile( string path, string loadFuncName = MODULE_IMPL_NAME ) {
         lib.load( [path] );
         
-	    loadImpl = cast( FGetModuleImpl )lib.loadSymbol( loadFuncName );
-	    mod = loadImpl();
+	    loadImpl = cast( TGetModuleImpl )lib.loadSymbol( loadFuncName );
+        if ( loadImpl ) {
+	        mod = loadImpl();
+        } else {
+            log.error( "Invalid shared lib module file: " ~ path );
+        }
+    }
+
+    void unloadLib() {
+        lib.unload();
     }
 }
 
-alias FGetModuleImpl = extern(C) nothrow IModule function();
-enum MODULE_IMPL_NAME = "getModule";
-
-template ImplementModule( T ) {
+template TImplementModule( T ) {
     import std.string : format;
  
-	const char[] ImplementModule = format(
-		`
+	enum TImplementModule = format(
+		q{
+        import engine.core.mod.imod;
+
 		extern(C)
         export nothrow IModule %2$s() {
             import core.memory;
@@ -40,7 +50,9 @@ template ImplementModule( T ) {
             import core.sys.windows.windows;
             import core.sys.windows.dll;
             switch ( ulReason ) {
-                default: assert(0);
+            default: 
+                assert( 0 );
+            
             case DLL_PROCESS_ATTACH:
                 dll_process_attach( hInstance, true );
                 break;
@@ -59,7 +71,7 @@ template ImplementModule( T ) {
             }
             return true;
         }
-		`,
+        },
 		T.stringof,
         MODULE_IMPL_NAME
     );

@@ -31,12 +31,14 @@ public:
         listener.destroy();
     }
 
-    @property
     SModuleInfo info() {
         return SModuleInfo(
             "BOX2D",
-            "MAPLE_CORE", 
-            "1.0"
+            "NENG2_CORE", 
+            "1.0",
+            EModuleInitPhase.MIP_UPON_REQUEST,
+            EModuleDestroyPhase.MDP_NORMAL,
+            EModuleUpdate.MU_NORMAL,
         );
     }
 

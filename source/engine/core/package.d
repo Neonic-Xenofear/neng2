@@ -12,3 +12,8 @@ import engine.core.resource;
 import engine.core.serialize;
 import engine.core.utils;
 import engine.core.vfs;
+
+void initCore() {
+    CModuleManager.get().add( new CCoreResourcesModule() );
+    CModuleManager.get().add( new CInputModule() );
+}

@@ -12,16 +12,6 @@ public import engine.physics2d.raycast_result;
 abstract class APhysWorld2D : IModule {
     ushort[string] collisionMasks;
 
-    @property
-    final EModuleUpdate updateInfo() {
-        return EModuleUpdate.MU_NORMAL;
-    }
-
-    @property
-    final EModuleInitPhase initPhase() {
-        return EModuleInitPhase.MIP_UPON_REQUEST;
-    }
-
     final void updateCollisionMasks() {
         import std.string : split;
         import std.conv : to;

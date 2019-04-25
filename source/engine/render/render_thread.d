@@ -129,7 +129,6 @@ public:
         thread until render end work.
     */
     void endThread() {
-        getEngine().window.close();
         send( SRenderShutdown() );
         waitUntilRenderEnd(); //Allow thread end work
 

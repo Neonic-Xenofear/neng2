@@ -56,7 +56,7 @@ public:
     }
 
     void deserializeFromString( string serializeStr ) {
-        import engine.app.logger : log;
+        import engine.core.utils.logger : log;
 
         //Null resource ignore
         if ( serializeStr == "" ) {
@@ -76,7 +76,6 @@ public:
         getResourceManager().loadResource( resource, resource.path );
 
         onDeserialized.emit();
-        onDeserialized.disconnectAll();
     }
 
     /**

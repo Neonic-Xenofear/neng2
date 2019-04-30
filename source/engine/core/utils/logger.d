@@ -1,4 +1,4 @@
-module engine.app.logger;
+module engine.core.utils.logger;
 
 import std.experimental.logger;
 import std.stdio : File;

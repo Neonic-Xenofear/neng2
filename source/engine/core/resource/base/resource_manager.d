@@ -3,7 +3,7 @@ module engine.core.resource.base.resource_manager;
 import std.algorithm : canFind;
 
 import engine.core.engine : getVFS;
-import engine.app.logger;
+import engine.core.utils.logger;
 import engine.core.multithreading;
 import engine.core.serialize;
 import engine.core.resource.base.resource;

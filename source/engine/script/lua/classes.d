@@ -170,6 +170,9 @@ private extern(C) int methodWrapper(Del, Class, uint index)(lua_State* L)
   }
 
   Class self = *cast(Class*)sD;
+  if ( !self ) {
+    return 0;
+  }
   
   Del func;
   func.ptr = cast(void*)self;

@@ -3,7 +3,7 @@ module engine.core.vfs.vfs;
 import std.string;
 import std.algorithm.searching;
 
-import engine.app.logger;
+import engine.core.utils.logger;
 import engine.core.utils.singleton;
 public import engine.core.vfs.base.dir;
 public import engine.core.vfs.base.file;

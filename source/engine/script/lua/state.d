@@ -14,7 +14,7 @@ import engine.script.attrib;
 import engine.script.lua.classes : registerClassType = registerClass;
 import engine.script.lua.stack;
 import engine.script.lua.exception;
-import engine.app.logger;
+import engine.core.utils.logger;
 import std.conv;
 
 struct SScriptClassInfo {

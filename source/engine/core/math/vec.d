@@ -7,6 +7,8 @@ private import std.traits;
 import engine.core.utils.compile_templ;
 import engine.core.serialize.attribute;
 
+enum VECTOR_ELEMENTS_NAMES = ["x", "y", "z", "w"];
+
 struct SVec( T, int size )
     if ( size > 1 && isNumeric!T ) 
 {
@@ -27,7 +29,7 @@ public:
         T[size] data;
         
         static if( size < 5 ) {
-            struct { mixin( elementsGen( ["x", "y", "z", "w"], 'T', size ) ); }
+            struct { mixin( elementsGen( VECTOR_ELEMENTS_NAMES, 'T', size ) ); }
         }
     }
 
@@ -233,6 +235,24 @@ public:
         SVec ret = this;
         ret.normalize();
         return ret;
+    }
+
+    string toString() {
+        import std.conv : to;
+
+        string resStr;
+        
+        for ( int i = 0; i < data.length; i++ ) {
+            if ( i < VECTOR_ELEMENTS_NAMES.length ) {
+                if ( i != 0 ) {
+                    resStr ~= "; ";
+                }
+
+                resStr ~= VECTOR_ELEMENTS_NAMES[i] ~": " ~ to!string( data[i] );
+            }
+        }
+
+        return resStr;
     }
 }
 

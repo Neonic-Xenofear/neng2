@@ -6,5 +6,6 @@ import engine.core.utils.compile_templ;
 import engine.core.utils.path;
 import engine.core.utils.singleton;
 import engine.core.utils.envelope;
+import engine.core.utils.logger;
 import engine.core.utils.uda;
 import engine.core.utils.profile;

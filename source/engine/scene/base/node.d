@@ -57,7 +57,7 @@ public:
         CNode parent;
         CNode[] children;
 
-        SColor4 modulateColor = SColor4.white; 
+        SColor4 modulateColor = SColor4.white;
     }
 
 protected:

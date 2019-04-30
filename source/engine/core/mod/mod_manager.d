@@ -5,7 +5,7 @@ import engine.core.engine.class_db;
 public import engine.core.mod.imod;
 public import engine.core.mod.lib_module;
 import engine.core.utils.singleton;
-import engine.app.logger;
+import engine.core.utils.logger;
 import engine.core.engine.engine;
 public import engine.core.vfs.vfs;
 import engine.core.utils.array : removeElement;

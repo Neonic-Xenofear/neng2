@@ -1,9 +1,10 @@
-module engine.core.input.input;
+module engine.core.hal.input;
 
+public:
 import engine.core.mod;
-public import engine.core.math.vec;
-public import engine.core.input.keyboard;
-public import engine.core.input.mouse;
+import engine.core.math.vec;
+import engine.core.input.keyboard;
+import engine.core.input.mouse;
 
 class CInput : IModule {
     SModuleInfo info() {

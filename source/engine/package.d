@@ -1,7 +1,6 @@
 module engine;
 
 public:
-import engine.app;
 import engine.core;
 import engine.framework;
 import engine.physics2d;

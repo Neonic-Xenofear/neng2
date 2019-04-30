@@ -5,7 +5,7 @@ import core.thread;
 import engine.core.ext_data;
 import engine.script.script;
 import engine.script.lua.state;
-import engine.app.logger;
+import engine.core.utils.logger;
 import engine.core.vfs.vfs;
 import engine.core.utils.path;
 

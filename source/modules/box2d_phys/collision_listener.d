@@ -2,7 +2,7 @@ module modules.box2d_phys.collision_listener;
 
 import dbox;
 
-import engine.app.logger;
+import engine.core.utils.logger;
 
 import modules.box2d_phys.body_data;
 

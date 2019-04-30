@@ -2,7 +2,7 @@ module engine.resources.sdlang;
 
 public import sdlang;
 
-import engine.app.logger;
+import engine.core.utils.logger;
 import engine.core.resource.base.resource;
 import engine.core.engine.config;
 

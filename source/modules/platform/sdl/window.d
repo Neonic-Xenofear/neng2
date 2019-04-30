@@ -8,7 +8,7 @@ import derelict.sdl2.sdl;
 import derelict.sdl2.image;
 import derelict.sdl2.ttf;
 
-import engine.app.window;
+import engine.core.hal.window;
 import engine.core.engine.engine;
 
 import engine.core.utils;

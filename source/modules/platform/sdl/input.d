@@ -2,7 +2,7 @@ module modules.platform.sdl.input;
 
 import derelict.sdl2.sdl;
 
-public import engine.core.input;
+public import engine.core.hal.input;
 
 class CSDLInput : CInput {
     int[EKeyboard] SDLKeyboard;

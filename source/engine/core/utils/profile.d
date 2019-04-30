@@ -1,6 +1,6 @@
 module engine.core.utils.profile;
 
-import engine.app.logger;
+import engine.core.utils.logger;
 
 void bencFunc( alias func )( lazy string name ) {
     import std.datetime.stopwatch : benchmark;

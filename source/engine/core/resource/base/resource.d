@@ -8,17 +8,22 @@ import engine.core.object;
 import engine.core.serialize;
 import engine.core.utils.array : removeElement;
 
+/**
+    Resource loading phase
+*/
 enum EResourceLoadPhase {
-    RLP_NONE,
-    RLP_LOADING,
-    RLP_FAILED,
-    RLP_SUCCES,
+    RLP_NONE,       ///Nothing in process
+    RLP_LOADING,    ///Resource loading
+    RLP_FAILED,     ///Something get wrong
+    RLP_SUCCES,     ///Resource loaded normal
 }
 
+/**
+    How load resource
+*/
 enum EResourceLoadingType {
-    RLT_STATIC,       //Load in main thread
-    RLT_ASYNC,        //Load in separated thread
-    RLT_UPON_REQUEST, //Load when get request
+    RLT_STATIC,       ///Load in main thread
+    RLT_ASYNC,        ///Load in separated thread
 }
 
 /**
@@ -46,6 +51,9 @@ struct RegisterResource {
     string resTypeName;
 }
 
+/**
+    Used to declare resource loading type
+*/
 struct ResourceLoadType {
     EResourceLoadingType type;
 }
@@ -87,7 +95,7 @@ public:
 
     ~this() {
         import engine.core.engine.engine : getResourceManager;
-        import engine.app.logger : log;
+        import engine.core.utils.logger : log;
 
         if ( owners.length > 0 ) {
             log.warning( "Resource is still have owners!" );
@@ -160,7 +168,7 @@ protected:
     }
 
     void updateOwners() {
-        import engine.app.logger : log;
+        import engine.core.utils.logger : log;
         
         foreach ( own; owners ) {
             if ( !own ) {

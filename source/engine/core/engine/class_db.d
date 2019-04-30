@@ -1,6 +1,6 @@
 module engine.core.engine.class_db;
 
-import engine.app.logger;
+import engine.core.utils.logger;
 import engine.core.utils.singleton;
 import engine.core.utils.array;
 import engine.script.script_manager;

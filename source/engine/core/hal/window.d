@@ -1,4 +1,4 @@
-module engine.app.window;
+module engine.core.hal.window;
 
 import engine.core.math.aabb;
 import engine.core.engine.engine;

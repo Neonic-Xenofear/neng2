@@ -10,7 +10,7 @@ import modules.box2d_phys;
 import modules.png;
 
 void registerModules() {
-    import engine.app.logger : log;
+    import engine.core.utils.logger : log;
 
     CModuleManager.get().add( new CSDLInput() );
     CModuleManager.get().add( new COpenGLRender() );

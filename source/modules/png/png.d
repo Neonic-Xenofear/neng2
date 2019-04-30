@@ -6,7 +6,7 @@ import imageformats;
 
 public import engine.core.resource.texture;
 public import engine.core.vfs.vfs;
-import engine.app.logger;
+import engine.core.utils.logger;
 import engine.core.engine.engine;
 
 class CPNGLoader : ITextureFormatLoader {

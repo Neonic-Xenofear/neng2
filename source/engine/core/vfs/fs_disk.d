@@ -5,7 +5,7 @@ import std.path;
 import std.string;
 import std.algorithm;
 
-import engine.app.logger;
+import engine.core.utils.logger;
 import engine.core.utils.array;
 public import engine.core.vfs.base.dir;
 public import engine.core.utils.path;

@@ -1,6 +1,6 @@
 module engine.core.resource.texture;
 
-import engine.app.logger;
+import engine.core.utils.logger;
 import engine.core.engine;
 public import engine.core.resource.base.resource;
 import engine.core.resource.base.resource_loader;

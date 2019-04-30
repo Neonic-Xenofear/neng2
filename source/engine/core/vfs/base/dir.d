@@ -2,7 +2,7 @@ module engine.core.vfs.base.dir;
 
 import std.string;
 
-import engine.app.logger;
+import engine.core.utils.logger;
 import engine.core.utils.array;
 public import engine.core.vfs.base.file;
 public import engine.core.vfs.vfs;;

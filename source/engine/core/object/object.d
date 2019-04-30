@@ -93,7 +93,7 @@ public:
     }
 
     ~this() {
-        import engine.app.logger : log;
+        import engine.core.utils.logger : log;
         assert( locker.id.empty(), "Delete object while it locked. Perhaps you used \"destroy\" instead \"queueFree\"?" );
     }
 

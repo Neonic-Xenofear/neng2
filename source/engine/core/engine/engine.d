@@ -6,8 +6,8 @@ import std.conv;
 
 import engine.core.utils.singleton;
 public import engine.render;
-import engine.app.window;
-public import engine.app.logger;
+import engine.core.hal;
+public import engine.core.utils.logger;
 public import engine.scene.base.scene_tree;
 public import engine.core.mod.mod_manager;
 public import engine.core.vfs.vfs;

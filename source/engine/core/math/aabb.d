@@ -17,7 +17,7 @@ struct SAABB {
         }
 
         //We use inverted Y coordinate
-        import engine.app.logger;
+        import engine.core.utils.logger;
         if ( max.y > iAABB.min.y || min.y < iAABB.max.y ) {
             return false;
         }

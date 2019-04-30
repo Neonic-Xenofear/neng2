@@ -2,7 +2,7 @@ module engine.core.multithreading.fiber;
 
 public import core.thread : Fiber;
 
-public import engine.app.logger;
+public import engine.core.utils.logger;
 
 alias TFiberFunc = void function();
 alias TFiberDelegate = void delegate();

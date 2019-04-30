@@ -7,7 +7,6 @@ import engine.core.input.mod_keys;
 import engine.core.input.input_event;
 import engine.core.input.keyboard;
 import engine.core.input.mouse;
-import engine.core.input.input;
 
 import engine.core.mod.register_module;
 

@@ -1,7 +1,7 @@
 module engine.render.render;
 
 import engine.core.mod.imod;
-import engine.app.window;
+import engine.core.hal.window;
 
 public import engine.core.resource.texture;
 public import engine.resources;

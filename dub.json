@@ -22,6 +22,5 @@
 	},
 
 	"targetPath": "bin/x86",
-	"targetType": "executable",
-	"dflags": ["-fPIC"]
+	"targetType": "executable"
 }

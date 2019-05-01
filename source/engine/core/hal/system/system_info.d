@@ -37,7 +37,7 @@ private void updateSystemInfo() {
     version( Windows ) {
         import core.sys.windows.windows;
         MEMORYSTATUSEX memStat;
-        memStat.dwLength = sizeof( memStat );
+        memStat.dwLength = memStat.sizeof;
         GlobalMemoryStatusEx( &memStat );
         
         procInfo.totalRam = memStat.ullTotalPhys;

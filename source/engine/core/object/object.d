@@ -57,7 +57,6 @@ template TScopeLockObject( alias T ) {
     enum TScopeLockObject = 
     format( 
         q{
-            //assert( !(%1$s).isLocked(), "Trying to process locked object" );
             SObjectLock lock;
             (%1$s).lock( lock );
             scope( exit ) {

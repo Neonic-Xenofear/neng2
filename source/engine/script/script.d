@@ -12,20 +12,28 @@ import engine.core.resource;
 @ResourceLoadType( EResourceLoadingType.RLT_STATIC )
 class CScript : AResource {
     mixin( TResourceRegister!() );
+public:
+    @Serialize
+    string className;
+    AObject ownerObj;
+
 protected:
     bool bInstanced = false;
     CExtData extData;
 
 public:
-    @Serialize
-    string className;
-
     @ScriptExport( "", MethodType.ctor )
     this() {
         extData = new CExtData();
     }
 
-    void initInstance( T )( T obj = null ) {
+    this( AObject own ) {
+        ownerObj = own;
+        extData = new CExtData();
+    }
+
+    void initInstance( T : AObject )( T obj = null ) {
+        ownerObj = obj;
         getEngine().scriptManager.getNewScriptObject( className, extData );
         callFunctionWithoutValidation( "init", obj );
         bInstanced = true;

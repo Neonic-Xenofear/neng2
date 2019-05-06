@@ -72,6 +72,17 @@ void basicRenderFunc( Tid ownerId ) {
             send( ownerId, SRenderDestroyMeshDataEnd() );
         },
 
+        ( SRenderGenRenderTarget com ) {
+            render.genRenderTarget( com.rt.get() );
+        },
+        ( SRenderDestroyRenderTarget com ) {
+            render.destroyRenderTarget( com.rt.get() );
+            send( ownerId, SRenderDestroyRenderTargetEnd() );
+        },
+        ( SRenderBindRenderTarget com ) {
+            render.bindRenderTarget( com.rt.get() );
+        },
+
         ( SRenderShutdown com ) {
             bWork = false;
             CModuleManager.get().removeModule( render );
@@ -251,5 +262,18 @@ class CMTRender : AProtectRender {
 
     override void bindShaderImpl( CShader shader ) {
         
+    }
+
+    override void genRenderTargetImpl( CRenderTarget rt ) {
+        thread.send( SRenderGenRenderTarget( SEnvelope!CRenderTarget( rt ) ) );
+    }
+
+    override void destroyRenderTargetImpl( CRenderTarget rt ) {
+        thread.send( SRenderDestroyRenderTarget( SEnvelope!CRenderTarget( rt ) ) );
+        thread.waitUntil!SRenderDestroyRenderTargetEnd();
+    }
+
+    override void bindRenderTargetImpl( CRenderTarget rt ) {
+        thread.send( SRenderBindRenderTarget( SEnvelope!CRenderTarget( rt ) ) );
     }
 }

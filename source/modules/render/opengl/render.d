@@ -522,6 +522,44 @@ public:
         glUseProgram( shader.extData.as!GLuint );
     }
 
+    override void genRenderTarget( CRenderTarget rt ) {
+        GLuint rtName = 0;
+        glGenFramebuffers( 1, &rtName );
+        glBindFramebuffer( GL_FRAMEBUFFER, rtName );
+
+            GLuint renderTexture;
+            glGenTextures( 1, &renderTexture );
+                glBindTexture( GL_TEXTURE_2D, renderTexture );
+                glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, rt.width, rt.height, 0, GL_RGB, GL_UNSIGNED_INT, cast( const( void )* )0 );
+                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+            glBindTexture( GL_TEXTURE_2D, 0 );
+
+            glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0 );
+
+        glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+
+        rt.extData = [rtName, renderTexture];
+    }
+
+    override void destroyRenderTarget( CRenderTarget rt ) {
+        GLuint[2] extData = rt.extData.as!( GLuint[2] );
+        glDeleteFramebuffers( 1, &extData[0] );
+        rt.extData = extData;
+    }
+
+    override void bindRenderTarget( CRenderTarget rt ) {
+        if ( rt ) {
+            if ( rt.extData.isNull() ) {
+                throw new Exception( "Trying to bind none generated render target" );
+            }
+
+            glBindFramebuffer( GL_FRAMEBUFFER, ( rt.extData.as!( GLuint[2] ) )[0] );
+        } else {
+            glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+        }
+    }
+
 private:
     /**
         Compile single shader from code

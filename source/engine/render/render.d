@@ -9,6 +9,7 @@ public import engine.core.math.vec;
 public import engine.core.math.color;
 public import engine.scene.base;
 public import engine.render.shader;
+public import engine.render.buffer;
 
 abstract class ARender : IModule {
     void clearScreen();
@@ -30,8 +31,19 @@ abstract class ARender : IModule {
 
     void setDrawColor( SColor4 color );
 
+    /*  SHADERS   */
     void compileShader( CShader shader );
     void bindShader( CShader shader );
+
+    /*  RENDER TARGET   */
+    void genRenderTarget( CRenderTarget rt );
+    void destroyRenderTarget( CRenderTarget rt );
+    /**
+        Bind render target
+        Params:
+            rt - render target, if null - bind default render target
+    */
+    void bindRenderTarget( CRenderTarget rt );
 }
 
 abstract class AProtectRender : ARender {
@@ -65,7 +77,7 @@ abstract class AProtectRender : ARender {
         mixin( TLockResource!( texture ) );
         
         if ( texture.extData.isNull() ) {
-            throw new Exception( "Trying destroy null render data" );
+            throw new Exception( "Trying destroy none generated texture" );
         }
 
         destroyTextureDataImpl( texture );
@@ -200,7 +212,9 @@ abstract class AProtectRender : ARender {
     }
 
     override void compileShader( CShader shader ) {
-        mixin( TLockResource!( shader ) );
+        if ( shader ) {
+            mixin( TLockResource!( shader ) );
+        }
 
         compileShaderImpl( shader );
     }
@@ -211,6 +225,39 @@ abstract class AProtectRender : ARender {
         }
 
         bindShaderImpl( shader );
+    }
+
+    override void genRenderTarget( CRenderTarget rt ) {
+        if ( !rt ) {
+            throw new Exception( "Trying to gen null render target" );
+        }
+
+        mixin( TScopeLockObject!( rt ) );
+
+        if ( !rt.extData.isNull() ) {
+            throw new Exception( "Trying to gen already generated render target" );
+        }
+
+        genRenderTargetImpl( rt );
+    }
+
+    override void destroyRenderTarget( CRenderTarget rt ) {
+        if ( !rt ) {
+            throw new Exception( "Trying to destroy null render target" );
+        }
+
+        mixin( TScopeLockObject!( rt ) );
+
+        if ( rt.extData.isNull() ) {
+            throw new Exception( "Trying to destroy none generated render target" );
+        }
+
+        destroyRenderTargetImpl( rt );
+    }
+
+    override void bindRenderTarget( CRenderTarget rt ) {
+        mixin( TScopeLockObject!( rt ) );
+        bindRenderTargetImpl( rt );
     }
 
     void clearScreenImpl();
@@ -233,4 +280,8 @@ abstract class AProtectRender : ARender {
 
     void compileShaderImpl( CShader shader );
     void bindShaderImpl( CShader shader );
+
+    void genRenderTargetImpl( CRenderTarget rt );
+    void destroyRenderTargetImpl( CRenderTarget rt );
+    void bindRenderTargetImpl( CRenderTarget rt );
 }

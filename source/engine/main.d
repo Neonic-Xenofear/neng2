@@ -132,7 +132,8 @@ private void test() {
         textbox.addChild( t );*/
     }
 
-
+    //CRenderTarget rt = new CRenderTarget( 100, 100 );
+    //rt.queueFree();
 
     CWindowGUI win = new CWindowGUI();
     win.setTitleTexture( loadTexture( "resources/test/textures/test1.png" ) );
